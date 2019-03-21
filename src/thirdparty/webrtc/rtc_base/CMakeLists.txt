@@ -1,0 +1,296 @@
+message("Build rtc_base static library")
+
+cmake_minimum_required(VERSION 2.8.11)
+set(rtc_base_VERSION 2.0.0)
+
+add_subdirectory(experiments)
+add_subdirectory(memory)
+add_subdirectory(network)
+add_subdirectory(numerics)
+add_subdirectory(strings)
+add_subdirectory(synchronization)
+add_subdirectory(system)
+add_subdirectory(third_party/base64)
+add_subdirectory(third_party/sigslot)
+add_subdirectory(time)
+
+file(GLOB rtc_base_srcs 
+	zero_memory.cc
+	zero_memory.h
+	virtual_socket_server.cc
+	virtual_socket_server.h
+	weak_ptr.cc
+	weak_ptr.h
+	timestamp_aligner.cc
+	timestamp_aligner.h
+	time_utils.cc
+	time_utils.h
+	trace_event.h
+	type_traits.h
+	unique_id_generator.cc
+	unique_id_generator.h
+	thread_annotations.h
+	thread.cc
+	thread_checker.h
+	thread_checker_impl.cc
+	thread_checker_impl.h
+	thread.h
+	task_utils
+	template_util.h
+	task_queue.h
+	task_queue_posix.cc
+	task_queue_posix.h
+	task_queue_stdlib.cc
+	swap_queue.h
+	stringize_macros.h
+	string_to_number.cc
+	string_to_number.h
+	string_utils.cc
+	string_utils.h
+	ssl_roots.h
+	ssl_stream_adapter.cc
+	ssl_stream_adapter.h
+	stream.cc
+	stream.h
+	string_encode.cc
+	string_encode.h
+	ssl_certificate.cc
+	ssl_certificate.h
+	ssl_fingerprint.cc
+	ssl_fingerprint.h
+	ssl_identity.cc
+	ssl_identity.h
+	socket_factory.h
+	socket_server.h
+	socket_stream.cc
+	socket_stream.h
+	socket_unittest.h
+	ssl_adapter.cc
+	ssl_adapter.h
+	socket_adapters.cc
+	socket_adapters.h
+	socket_address.cc
+	socket_address.h
+	socket_address_pair.cc
+	socket_address_pair.h
+	socket.h
+	sigslot_tester.h
+	socket.cc
+	sequenced_task_checker.h
+	sequenced_task_checker_impl.cc
+	sequenced_task_checker_impl.h
+	server_socket_adapters.cc
+	server_socket_adapters.h
+	signal_thread.cc
+	signal_thread.h
+	sigslot_repeater.h
+	ref_counter.h
+	rolling_accumulator.h
+	rtc_certificate.cc
+	rtc_certificate_generator.cc
+	rtc_certificate_generator.h
+	rtc_certificate.h
+	sanitizer.h
+	rate_limiter.h
+	rate_statistics.cc
+	rate_statistics.h
+	rate_tracker.cc
+	rate_tracker.h
+	ref_counted_object.h
+	ref_count.h
+	race_checker.h
+	random.cc
+	random.h
+	rate_limiter.cc
+	protobuf_utils.h
+	proxy_info.cc
+	proxy_info.h
+	proxy_server.cc
+	proxy_server.h
+	race_checker.cc
+	platform_file.cc
+	platform_file.h
+	platform_thread.cc
+	platform_thread.h
+	platform_thread_types.cc
+	platform_thread_types.h
+	openssl_stream_adapter.cc
+	openssl_stream_adapter.h
+	openssl_utility.cc
+	openssl_utility.h
+	physical_socket_server.cc
+	physical_socket_server.h
+	openssl_key_derivation_hkdf.h
+	openssl_session_cache.cc
+	openssl_session_cache.h
+	openssl_adapter.cc
+	openssl_adapter.h
+	openssl_certificate.cc
+	openssl_certificate.h
+	openssl_digest.cc
+	openssl_digest.h
+	openssl_identity.cc
+	openssl_identity.h
+	openssl_key_derivation_hkdf.cc
+	one_time_event.h
+	openssl.h
+	network_constants.h
+	network_monitor.cc
+	network_monitor.h
+	network_route.h
+	null_socket_server.cc
+	null_socket_server.h
+	net_helper.cc
+	net_helper.h
+	net_helpers.cc
+	net_helpers.h
+	network.cc
+	network.h
+	message_digest.cc
+	message_digest.h
+	message_handler.cc
+	message_handler.h
+	message_queue.cc
+	message_queue.h
+	nat_server.cc
+	nat_server.h
+	nat_socket_factory.cc
+	nat_socket_factory.h
+	nat_types.cc
+	nat_types.h
+	memory_stream.cc
+	memory_stream.h
+	memory_usage.cc
+	memory_usage.h
+	message_buffer_reader.h
+	logging.cc
+	logging.h
+	log_sinks.cc
+	log_sinks.h
+	mdns_responder_interface.h
+	keep_ref_until_done.h
+	key_derivation.cc
+	key_derivation.h
+	location.cc
+	location.h
+	ip_address.cc
+	ip_address.h
+	gunit_prod.h
+	helpers.cc
+	helpers.h
+	http_common.cc
+	http_common.h
+	ifaddrs_converter.cc
+	ifaddrs_converter.h
+	ignore_wundef.h
+	firewall_socket_server.cc
+	firewall_socket_server.h
+	flags.cc
+	flags.h
+	format_macros.h
+	function_view.h
+	fake_network.h
+	fake_ssl_identity.cc
+	fake_ssl_identity.h
+	file.cc
+	file.h
+	file_posix.cc
+	file_rotating_stream.cc
+	file_rotating_stream.h
+	fake_clock.cc
+	fake_clock.h
+	fake_mdns_responder.h
+	deprecation.h
+	dscp.h
+	event.cc
+	event.h
+	event_tracer.cc
+	event_tracer.h
+	critical_section.cc
+	critical_section.h
+	crypt_string.cc
+	crypt_string.h
+	data_rate_limiter.cc
+	data_rate_limiter.h
+	cpu_time.cc
+	cpu_time.h
+	crc32.cc
+	crc32.h
+	checks.cc
+	checks.h
+	compile_assert_c.h
+	constructor_magic.h
+	copy_on_write_buffer.cc
+	copy_on_write_buffer.h
+	byte_order.h
+	callback.h
+	callback.h.pump
+	buffer_queue.h
+	byte_buffer.cc
+	byte_buffer.h
+	bitrate_allocation_strategy.h
+	buffer.h
+	buffer_queue.cc
+	bit_buffer.cc
+	bit_buffer.h
+	bitrate_allocation_strategy.cc
+	atomic_ops.h
+	bind.h
+	async_tcp_socket.h
+	async_udp_socket.cc
+	async_udp_socket.h
+	async_resolver_interface.cc
+	async_resolver_interface.h
+	async_socket.cc
+	async_socket.h
+	async_tcp_socket.cc
+	async_invoker.cc
+	async_invoker.h
+	async_invoker_inl.h
+	async_packet_socket.cc
+	async_packet_socket.h
+	arraysize.h
+	)
+
+source_group(source FILES ${rtc_base_srcs})
+
+add_library(rtc_base ${rtc_base_srcs} 
+	$<TARGET_OBJECTS:rtc_experiments> 
+	$<TARGET_OBJECTS:rtc_memory> 
+	$<TARGET_OBJECTS:rtc_strings> 
+	$<TARGET_OBJECTS:rtc_numerics> 
+	$<TARGET_OBJECTS:rtc_synchronize> 
+	$<TARGET_OBJECTS:rtc_system> 
+	$<TARGET_OBJECTS:rtc_time> 
+	$<TARGET_OBJECTS:rtc_sigslot> 
+	$<TARGET_OBJECTS:rtc_base64> 
+	$<TARGET_OBJECTS:rtc_network>)
+
+target_include_directories(rtc_base PUBLIC ..)
+target_include_directories(rtc_base PUBLIC ../../abseil-cpp/)
+target_include_directories(rtc_base PUBLIC ../../boringssl/include/)
+
+if(WIN32)
+	add_definitions(-DWEBRTC_WIN)
+	target_link_libraries(tm PRIVATE wsock32 ws2_32 secur32 wininet Shlwapi)
+	if(NOT LOG_TRANS_DEFINED)
+		# Find the LogDll library
+		find_library(LOG_LIBRARY LogDll)
+	endif(NOT LOG_TRANS_DEFINED)
+	# require min win system version xp (0x0501)
+	target_compile_definitions(tm PRIVATE "_WIN32_WINNT=0x0501" PRIVATE "WIN32_LEAN_AND_MEAN" PRIVATE "_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS")
+	# Generate map file and assembler output
+	set_target_properties(tm PROPERTIES COMPILE_FLAGS "/FAcs" LINK_FLAGS "/MAP") 
+else(WIN32)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-deprecated")
+	add_definitions(-DWEBRTC_POSIX)
+	add_definitions(-DWEBRTC_LINUX)
+	# Instruct CMake to run moc automatically when needed.
+	# set_target_properties(tm PROPERTIES MACOSX_RPATH OFF AUTOMOC ON)
+
+	# Find the Qt5Network library
+	# find_package(Qt5Network REQUIRED)
+	# target_link_libraries(tm PRIVATE Qt5::Network)
+
+endif(WIN32)
+

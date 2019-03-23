@@ -12,3 +12,4 @@ add_library(rtc_base64 OBJECT ${rtc_base64_srcs})
 target_include_directories(rtc_base64 PUBLIC ../../..)
 target_include_directories(rtc_base64 PUBLIC ../../../abseil-cpp/)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated")

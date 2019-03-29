@@ -13,6 +13,8 @@ public:
     SignalSession();
     ~SignalSession();
 
+    int Init();
+
     void Accept(rtc::AsyncTCPSocket *socket);
 
 private:
@@ -23,6 +25,8 @@ private:
             const int64_t& /* packet_time_us */);
 
     void OnClose(rtc::AsyncPacketSocket* socket, int err);
+
+    int InitHttpParser();
 
 private:
     std::unique_ptr<rtc::AsyncTCPSocket> socket_;

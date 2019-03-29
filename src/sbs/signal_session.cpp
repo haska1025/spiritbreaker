@@ -13,6 +13,14 @@ void SignalSession::Accept(rtc::AsyncTCPSocket *socket)
     socket_->SignalReadPacket.connect(this, &SignalSession::OnPacket);
     socket_->SignalClose.connect(this, &SignalSession::OnClose);
 }
+
+
+int SignalSession::InitHttpParser()
+{
+
+    return 0;
+}
+
 void SignalSession::OnPacket(rtc::AsyncPacketSocket* socket,
         const char* buf,
         size_t size,

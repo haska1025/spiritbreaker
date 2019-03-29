@@ -2,7 +2,7 @@ message("Build spiritbreaker...")
 
 cmake_minimum_required(VERSION 2.8.11)
 
-file(GLOB sbs_srcs *.cpp *.h)
+file(GLOB sbs_srcs *.cpp *.h *.cc)
 
 source_group(source FILES ${sbs_srcs})
 

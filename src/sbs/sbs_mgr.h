@@ -6,24 +6,26 @@
 #include <rtc_base/third_party/sigslot/sigslot.h>
 
 #include "sbs_decl.h"
+#include "httpserver.h"
 
 SBS_NAMESPACE_DECL_BEGIN
 
 class SBSMgr: public sigslot::has_slots<>
 {
 public:
-    SBSMgr(rtc::Thread *thr);
     ~SBSMgr();
 
+    static SBSMgr * Instance();
     int Initialize();
     int Close();
 
 private:
-    void OnAccept(rtc::AsyncSocket* socket);
+    void OnHttpRequest(HttpServer* server, HttpServerTransaction* trans); 
 
 private:
-    std::unique_ptr<rtc::AsyncSocket> server_socket_;
-    std::unique_ptr<rtc::Thread> thread_;
+    static SBSMgr instance_;
+
+    HttpListenServer *http_listener_;
 
     SBS_DISALLOW_CONSTRUCT(SBSMgr);
     SBS_DISALLOW_COPY_CONSTRUCT(SBSMgr);

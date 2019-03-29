@@ -44,6 +44,9 @@ private:
     // path=/room/leave
     static int CMD_PeerLeaveRoom(const Json::Value &req, Json::Value &rsp);
 
+    static void __GetBody(rtc::StreamInterface *document, std::string &body);
+    static void __SetBody(rtc::StreamInterface *document, const std::string &body);
+
     CMD_PROCESSOR_DECL();
 };
 SBS_NAMESPACE_DECL_END

@@ -646,8 +646,8 @@ HttpBase::flush_data() {
             // Prepend the chunk length in hex.
             // Note: sprintfn appends a null terminator, which is why we can't
             // combine it with the line terminator.
-            snprintf(buffer_ + len_, kChunkDigits + 1, "%.*x",
-                     kChunkDigits, read);
+            snprintf(buffer_ + len_, kChunkDigits + 1, "%.*zx",
+                     (int)kChunkDigits, read);
             // Add line terminator to the chunk length.
             memcpy(buffer_ + len_ + kChunkDigits, "\r\n", 2);
             // Add line terminator to the end of the chunk.
@@ -720,8 +720,8 @@ HttpBase::queue_headers() {
   while (header_ != data_->end()) {
     size_t len = snprintf(buffer_ + len_, sizeof(buffer_) - len_,
                           "%.*s: %.*s\r\n",
-                          header_->first.size(), header_->first.data(),
-                          header_->second.size(), header_->second.data());
+                          (int)header_->first.size(), header_->first.data(),
+                          (int)header_->second.size(), header_->second.data());
     if (len_ + len < sizeof(buffer_) - 3) {
       len_ += len;
       ++header_;

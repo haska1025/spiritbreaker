@@ -9,9 +9,14 @@ source_group(source FILES ${sbs_srcs})
 add_executable(sbs ${sbs_srcs})
 link_directories(../../build/thirdparty/webrtc/rtc_base/)
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(JSONCPP jsoncpp)
+
+
 target_include_directories(sbs PUBLIC ../thirdparty/webrtc/)
 target_include_directories(sbs PUBLIC ../thirdparty/abseil-cpp/)
-target_link_libraries(sbs rtc_base)
+target_include_directories(sbs PUBLIC ${JSONCPP_INCLUDE_DIRS})
+target_link_libraries(sbs rtc_base ${JSONCPP_LIBRARIES})
 
 find_package(Threads REQUIRED)
 if(THREADS_HAVE_PTHREAD_ARG)

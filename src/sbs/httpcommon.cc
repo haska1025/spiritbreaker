@@ -559,7 +559,7 @@ HttpRequestData::copy(const HttpRequestData& src) {
 size_t
 HttpRequestData::formatLeader(char* buffer, size_t size) const {
   RTC_DCHECK(path.find(' ') == std::string::npos);
-  return snprintf(buffer, size, "%s %.*s HTTP/%s", ToString(verb), path.size(),
+  return snprintf(buffer, size, "%s %.*s HTTP/%s", ToString(verb), (int)path.size(),
                   path.data(), ToString(version));
 }
 
@@ -677,10 +677,10 @@ void HttpResponseData::set_error(uint32_t scode) {
 
 size_t
 HttpResponseData::formatLeader(char* buffer, size_t size) const {
-  size_t len = snprintf(buffer, size, "HTTP/%s %lu", ToString(version), scode);
+  size_t len = snprintf(buffer, size, "HTTP/%s %u", ToString(version), scode);
   if (!message.empty()) {
     len += snprintf(buffer + len, size - len, " %.*s",
-                    message.size(), message.data());
+                    (int)message.size(), message.data());
   }
   return len;
 }

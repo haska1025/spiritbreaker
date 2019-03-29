@@ -1,4 +1,5 @@
 #include "sbs_mgr.h"
+#include "command_handler.h"
 #include <rtc_base/async_tcp_socket.h>
 
 SBSMgr SBSMgr::instance_;
@@ -35,7 +36,7 @@ int SBSMgr::Initialize()
 void SBSMgr::OnHttpRequest(HttpServer* server, HttpServerTransaction* trans)
 {
     printf("The request verb(%d) path(%s)\n", trans->request.verb, trans->request.path.c_str());
-    trans->response.set_success();
+    int rc = CommandHandler::HandleRequest(trans->request, trans->response);
     server->Respond(trans);
 }
 

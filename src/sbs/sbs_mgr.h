@@ -18,7 +18,7 @@ public:
     static SBSMgr * Instance();
     int Initialize();
     int Close();
-
+    
 private:
     void OnHttpRequest(HttpServer* server, HttpServerTransaction* trans); 
 

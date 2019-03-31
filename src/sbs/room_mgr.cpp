@@ -1,5 +1,9 @@
 #include "room_mgr.h"
 #include "room.h"
+#include "sbs_error.h"
+#include "httpcommon.h"
+
+#include <rtc_base/logging.h>
 
 RoomMgr::RoomMgr()
 {
@@ -9,6 +13,32 @@ RoomMgr RoomMgr::instance_;
 RoomMgr *RoomMgr::Instance()
 {
     return &instance_;
+}
+
+int RoomMgr::PeerJoinRoom(const Message &request, Message &response)
+{
+    RTC_LOG(LS_INFO) << "Peer join the room";
+    response = request;
+
+    return HC_OK;
+}
+int RoomMgr::PeerLeaveRoom(const Message &request, Message &response)
+{
+    return SBS_SUCCESS;
+}
+
+int RoomMgr::AddPublisher(const Message &request, Message &response)
+{
+    return SBS_SUCCESS;
+}
+int RoomMgr::ReomvePublisher(const Message &request, Message &response)
+{
+    return SBS_SUCCESS;
+}
+
+int RoomMgr::SetOfferSdp(const Message &request, Message &response)
+{
+    return SBS_SUCCESS;
 }
 
 bool RoomMgr::AddRoom(std::shared_ptr<Room> r)

@@ -1,6 +1,9 @@
-#include "sbs_mgr.h"
-#include "command_handler.h"
 #include <rtc_base/async_tcp_socket.h>
+#include <rtc_base/logging.h>
+
+#include "sbs_mgr.h"
+#include "sbs_error.h"
+#include "command_handler.h"
 
 SBSMgr SBSMgr::instance_;
 
@@ -17,25 +20,25 @@ SBSMgr * SBSMgr::Instance()
 }
 int SBSMgr::Initialize()
 {
-    int rc = 0;
+    int rc = SBS_SUCCESS;
     // Get port from configuration
     rtc::SocketAddress serveraddr("0.0.0.0", 9999);
 
     http_listener_ = new HttpListenServer(); 
     rc = http_listener_->Listen(serveraddr);
 
-    if (rc != 0){
-        printf("Listen failed!rc(%d)\n", rc);
-        return -1;
+    if (rc != SBS_SUCCESS){
+        RTC_LOG(LS_ERROR) << "Listen failed! rc=" << rc;
+        return rc;
     }
 
     http_listener_->SignalHttpRequest.connect(this, &SBSMgr::OnHttpRequest);
-    return 0;
+    return rc;
 }
 
 void SBSMgr::OnHttpRequest(HttpServer* server, HttpServerTransaction* trans)
 {
-    printf("The request verb(%d) path(%s)\n", trans->request.verb, trans->request.path.c_str());
+    RTC_LOG(LS_INFO) << "The request verb=" << trans->request.verb << " path=" << trans->request.path;
     int rc = CommandHandler::HandleRequest(trans->request, trans->response);
     server->Respond(trans);
 }

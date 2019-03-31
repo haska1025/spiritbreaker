@@ -185,7 +185,7 @@ HttpServer::Connection::onHttpHeaderComplete(bool chunked, size_t& data_size) {
   bool custom_document = false;
   server_->SignalHttpRequestHeader(server_, current_, &custom_document);
   if (!custom_document) {
-    current_->request.document.reset(new ExternalMemoryStream);
+    current_->request.document.reset(new MemoryStream);
   }
   return HE_NONE;
 }

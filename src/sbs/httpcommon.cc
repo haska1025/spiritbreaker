@@ -527,15 +527,13 @@ void HttpData::setDocumentAndLength(rtc::StreamInterface* document) {
   RTC_DCHECK(document != nullptr);
   this->document.reset(document);
   size_t content_length = 0;
-  /*
   if (this->document->GetAvailable(&content_length)) {
     char buffer[32];
-    sprintfn(buffer, sizeof(buffer), "%d", content_length);
+    snprintf(buffer, sizeof(buffer), "%d", (int)content_length);
     setHeader(HH_CONTENT_LENGTH, buffer);
   } else {
     setHeader(HH_TRANSFER_ENCODING, "chunked");
   }
-  */
 }
 
 //

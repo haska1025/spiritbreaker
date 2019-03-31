@@ -27,9 +27,9 @@ public:
     bool SetPosition(size_t position) override;
     bool GetPosition(size_t* position) const override;
     bool GetSize(size_t* size) const override;
-    bool GetAvailable(size_t* size) const override;
     bool ReserveSize(size_t size) override;
     */
+    bool GetAvailable(size_t* size) const override;
 
     char* GetBuffer() { return buffer_; }
     const char* GetBuffer() const { return buffer_; }
@@ -50,7 +50,6 @@ private:
 };
 
 // MemoryStream dynamically resizes to accomodate written data.
-/*
 class MemoryStream : public MemoryStreamBase {
 public:
     MemoryStream();
@@ -66,7 +65,6 @@ protected:
     static const int kAlignment = 16;
     char* buffer_alloc_;
 };
-*/
 // ExternalMemoryStream adapts an external memory buffer, so writes which would
 // extend past the end of the buffer will return end-of-stream.
 

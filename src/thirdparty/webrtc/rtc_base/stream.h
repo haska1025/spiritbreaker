@@ -109,6 +109,7 @@ class StreamInterface : public MessageHandler {
 
   // Return true if flush is successful.
   virtual bool Flush();
+  virtual bool GetAvailable(size_t* size) const{return false;}
 
   //
   // CONVENIENCE METHODS

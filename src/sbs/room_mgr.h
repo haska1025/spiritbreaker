@@ -2,6 +2,7 @@
 #define _ROOM_MGR_H_
 
 #include "sbs_decl.h"
+#include "sbs_message.h"
 #include <mutex>
 #include <memory>
 #include <unordered_map>
@@ -16,6 +17,14 @@ public:
     bool AddRoom(std::shared_ptr<Room> r);
     bool RemoveRoom(uint32_t id);
     std::shared_ptr<Room> GetRoom(uint32_t id);
+
+    int PeerJoinRoom(const Message &request, Message &response);
+    int PeerLeaveRoom(const Message &request, Message &response);
+
+    int AddPublisher(const Message &request, Message &response);
+    int ReomvePublisher(const Message &request, Message &response);
+
+    int SetOfferSdp(const Message &request, Message &response);
 
 private:
     static RoomMgr instance_;

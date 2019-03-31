@@ -3,11 +3,11 @@
 
 #include "sbs_decl.h"
 #include "httpcommon.h"
-#include <json/json.h>
+#include "sbs_message.h"
 
 SBS_NAMESPACE_DECL_BEGIN
 
-typedef int (*cmd_process_fun_t)(const Json::Value &req, Json::Value &rsp);
+typedef int (*cmd_process_fun_t)(const Message &req, Message &rsp);
 class CmdProcessorEntry
 {
 public:
@@ -40,12 +40,14 @@ public:
     static int HandleRequest(HttpRequestData &request, HttpResponseData &response);
 private:
     // path=/room/join
-    static int CMD_PeerJoinRoom(const Json::Value &req, Json::Value &rsp);
+    static int CMD_PeerJoinRoom(const Message &req, Message &rsp);
     // path=/room/leave
-    static int CMD_PeerLeaveRoom(const Json::Value &req, Json::Value &rsp);
+    static int CMD_PeerLeaveRoom(const Message &req, Message &rsp);
 
-    static void __GetBody(rtc::StreamInterface *document, std::string &body);
-    static void __SetBody(rtc::StreamInterface *document, const std::string &body);
+    static int __GetBody(rtc::StreamInterface *document, std::string &body);
+    static int __SetBody(rtc::StreamInterface *document, const std::string &body);
+    static int __JsonToMessage(const Json::Value &req, Message &m);
+    static int __MessageToJson(const Message &m, Json::Value &rsp);
 
     CMD_PROCESSOR_DECL();
 };

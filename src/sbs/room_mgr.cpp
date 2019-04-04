@@ -2,6 +2,7 @@
 #include "room.h"
 #include "sbs_error.h"
 #include "httpcommon.h"
+#include "peer.h"
 
 #include <rtc_base/logging.h>
 
@@ -18,7 +19,15 @@ RoomMgr *RoomMgr::Instance()
 int RoomMgr::PeerJoinRoom(const Message &request, Message &response)
 {
     RTC_LOG(LS_INFO) << "Peer join the room";
-    response = request;
+
+    auto room = GetRoom(request.room_id());
+    if (!room){
+        room = std::make_shared<Room>(request.room_id());
+    }
+    auto peer = room->GetPeer(request.peer_id());
+    if (!peer){
+        peer = std::make_shared<Peer>(request.peer_id(), room);
+    }
 
     return HC_OK;
 }

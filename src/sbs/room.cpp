@@ -1,8 +1,10 @@
 #include "room.h"
 #include "peer.h"
+#include "room_mgr.h"
 
-Room::Room()
+Room::Room(uint32_t id):id_(id)
 {
+    RoomMgr::Instance()->AddRoom(std::shared_ptr<Room>(this));
 }
 Room::~Room()
 {

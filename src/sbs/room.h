@@ -11,7 +11,7 @@ class Peer;
 class Room
 {
 public:
-    Room();
+    Room(uint32_t id);
     ~Room();
 
     bool AddPeer(std::shared_ptr<Peer> peer);

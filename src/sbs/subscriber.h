@@ -2,6 +2,7 @@
 #define _SUBSCRIBLER_H_
 
 #include "sbs_decl.h"
+#include <inttypes.h>
 
 SBS_NAMESPACE_DECL_BEGIN
 

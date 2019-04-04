@@ -2,6 +2,8 @@
 #define _PUBLISHER_H_
 
 #include "sbs_decl.h"
+#include <unordered_map>
+#include <memory>
 
 SBS_NAMESPACE_DECL_BEGIN
 class Subscriber;

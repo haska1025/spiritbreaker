@@ -1,0 +1,96 @@
+{
+   "default":{
+       "rtpMappings": {
+           "vp8":{
+               "payloadType": "100",
+               "encodingName": "VP8",
+               "clockRate": "90000",
+               "channels": "1",
+               "mediaType": "video",
+               "feedbackTypes": [
+                   "ccm fir",
+                   "nack",
+                   "nack pli",
+                   "goog-remb"
+               ]
+           },
+           "opus": {
+               "payloadType": "111",
+               "encodingName": "opus",
+               "clockRate": "48000",
+               "channels": "2",
+               "mediaType": "audio"
+           }
+       },
+       "extMappings": [
+          "urn:ietf:params:rtp-hdrext:ssrc-audio-level",
+          "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time",
+          "urn:ietf:params:rtp-hdrext:toffset",
+          "urn:3gpp:video-orientation",
+          "http://www.webrtc.org/experiments/rtp-hdrext/playout-delay",
+          "urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id"
+      ]
+   },
+
+   "vp9_and_opus": {
+       "rtpMappings": {
+           "vp8":{
+               "payloadType": "100",
+               "encodingName": "VP9",
+               "clockRate": "90000",
+               "channels": "1",
+               "mediaType": "video",
+               "feedbackTypes": [
+                   "ccm fir",
+                   "nack",
+                   "nack pli",
+                   "goog-remb"
+               ]
+           },
+           "opus": {
+               "payloadType": "111",
+               "encodingName": "opus",
+               "clockRate": "48000",
+               "channels": "2",
+               "mediaType": "audio"
+           }
+       },
+       "extMappings": [
+          "urn:ietf:params:rtp-hdrext:ssrc-audio-level",
+          "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time",
+          "urn:ietf:params:rtp-hdrext:toffset",
+          "urn:3gpp:video-orientation",
+          "http://www.webrtc.org/experiments/rtp-hdrext/playout-delay",
+          "urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id"
+      ]
+   },
+   "h264_and_opus":{
+       "rtpMappings":{
+             "payloadType": "101",
+             "encodingName": "H264",
+             "clockRate": "90000",
+             "channels": "1",
+             "mediaType": "video",
+             "formatParameters": {
+                 "profile-level-id": "42e01f",
+                 "level-asymmetry-allowed": "1",
+                 "packetization-mode": "1"
+             },
+             "feedbackTypes": [
+                 "ccm fir",
+                 "nack",
+                 "nack pli",
+                 "goog-remb"
+             ]
+       },
+       "extMappings": [
+          "urn:ietf:params:rtp-hdrext:ssrc-audio-level",
+          "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time",
+          "urn:ietf:params:rtp-hdrext:toffset",
+          "urn:3gpp:video-orientation",
+          "http://www.webrtc.org/experiments/rtp-hdrext/playout-delay",
+          "urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id"
+      ]
+   }
+}
+

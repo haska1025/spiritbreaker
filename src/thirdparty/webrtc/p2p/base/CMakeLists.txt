@@ -6,15 +6,15 @@ file(GLOB rtc_p2p_srcs
 	udp_port.h
 	transport_description_factory.cc
 	transport_description_factory.h
+	transport_description.cc
 	transport_description.h
 	transport_factory_interface.h
 	transport_info.h
 	turn_port.cc
 	turn_port.h
-	tcp_port.h
-	transport_description.cc
-	transport.h
 	tcp_port.cc
+	tcp_port.h
+	transport.h
 	stun.cc
 	stun.h
 	stun_port.cc
@@ -88,17 +88,13 @@ target_include_directories(rtc_p2p PUBLIC ../../../abseil-cpp/)
 
 if(WIN32)
 	add_definitions(-DWEBRTC_WIN)
-	target_link_libraries(tm PRIVATE wsock32 ws2_32 secur32 wininet Shlwapi)
-	if(NOT LOG_TRANS_DEFINED)
-		# Find the LogDll library
-		find_library(LOG_LIBRARY LogDll)
-	endif(NOT LOG_TRANS_DEFINED)
+	target_link_libraries(rtc_p2p PRIVATE wsock32 ws2_32 secur32 wininet Shlwapi)
 	# require min win system version xp (0x0501)
-	target_compile_definitions(tm PRIVATE "_WIN32_WINNT=0x0501" PRIVATE "WIN32_LEAN_AND_MEAN" PRIVATE "_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS")
+	target_compile_definitions(rtc_p2p PRIVATE "_WIN32_WINNT=0x0501" PRIVATE "WIN32_LEAN_AND_MEAN" PRIVATE "_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS")
 	# Generate map file and assembler output
-	set_target_properties(tm PROPERTIES COMPILE_FLAGS "/FAcs" LINK_FLAGS "/MAP") 
+	set_target_properties(rtc_p2p PROPERTIES COMPILE_FLAGS "/FAcs" LINK_FLAGS "/MAP") 
 else(WIN32)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wno-deprecated")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated")
 	add_definitions(-DWEBRTC_POSIX)
 	add_definitions(-DWEBRTC_LINUX)
 endif(WIN32)

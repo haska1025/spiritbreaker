@@ -6,17 +6,26 @@ file(GLOB sbs_srcs *.cpp *.h *.cc)
 
 source_group(source FILES ${sbs_srcs})
 
-add_executable(sbs ${sbs_srcs})
+
+link_directories(../thirdparty/boringssl/build/ssl)
+link_directories(../thirdparty/boringssl/build/crypto)
+
+link_directories(../thirdparty/abseil-cpp/build/absl/strings)
+link_directories(../thirdparty/abseil-cpp/build/absl/base)
+
 link_directories(../../build/thirdparty/webrtc/rtc_base/)
+link_directories(../../build/thirdparty/webrtc/pc/)
+link_directories(../../build/thirdparty/webrtc/p2p/base/)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
 
+add_executable(sbs ${sbs_srcs})
 
 target_include_directories(sbs PUBLIC ../thirdparty/webrtc/)
 target_include_directories(sbs PUBLIC ../thirdparty/abseil-cpp/)
 target_include_directories(sbs PUBLIC ${JSONCPP_INCLUDE_DIRS})
-target_link_libraries(sbs rtc_base ${JSONCPP_LIBRARIES})
+target_link_libraries(sbs rtc_pc rtc_p2p rtc_base ssl crypto absl_strings absl_base absl_internal_throw_delegate ${JSONCPP_LIBRARIES})
 
 find_package(Threads REQUIRED)
 if(THREADS_HAVE_PTHREAD_ARG)

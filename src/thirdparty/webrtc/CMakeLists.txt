@@ -7,5 +7,6 @@ add_subdirectory(system_wrappers)
 add_subdirectory(api)
 add_subdirectory(rtc_base)
 add_subdirectory(p2p)
+add_subdirectory(pc)
 add_subdirectory(examples)
 

@@ -8,7 +8,7 @@
 
 SBS_NAMESPACE_DECL_BEGIN
 class Peer;
-class Room
+class Room : public std::enable_shared_from_this<Room>
 {
 public:
     Room(uint32_t id);

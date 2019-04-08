@@ -25,7 +25,7 @@ add_executable(sbs ${sbs_srcs})
 target_include_directories(sbs PUBLIC ../thirdparty/webrtc/)
 target_include_directories(sbs PUBLIC ../thirdparty/abseil-cpp/)
 target_include_directories(sbs PUBLIC ${JSONCPP_INCLUDE_DIRS})
-target_link_libraries(sbs rtc_pc rtc_p2p rtc_base ssl crypto absl_strings absl_base absl_internal_throw_delegate ${JSONCPP_LIBRARIES})
+target_link_libraries(sbs rtc_pc rtc_p2p rtc_base ssl crypto absl_strings absl_base absl_throw_delegate ${JSONCPP_LIBRARIES})
 
 find_package(Threads REQUIRED)
 if(THREADS_HAVE_PTHREAD_ARG)

@@ -2,12 +2,15 @@
 #include "peer.h"
 #include "room_mgr.h"
 
+#include <rtc_base/logging.h>
+
 Room::Room(uint32_t id):id_(id)
 {
-    RoomMgr::Instance()->AddRoom(std::shared_ptr<Room>(this));
+    RTC_LOG(LS_INFO) << "Create the room id=" << id;
 }
 Room::~Room()
 {
+    RTC_LOG(LS_INFO) << "Destroy the room id=" << id_;
 }
 
 bool Room::AddPeer(std::shared_ptr<Peer> peer)

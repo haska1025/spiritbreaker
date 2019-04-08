@@ -23,10 +23,12 @@ int RoomMgr::PeerJoinRoom(const Message &request, Message &response)
     auto room = GetRoom(request.room_id());
     if (!room){
         room = std::make_shared<Room>(request.room_id());
+        RoomMgr::Instance()->AddRoom(room);
     }
     auto peer = room->GetPeer(request.peer_id());
     if (!peer){
         peer = std::make_shared<Peer>(request.peer_id(), room);
+        room->AddPeer(peer);
     }
 
     return HC_OK;

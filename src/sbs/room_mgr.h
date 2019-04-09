@@ -24,7 +24,7 @@ public:
     int AddPublisher(const Message &request, Message &response);
     int ReomvePublisher(const Message &request, Message &response);
 
-    int SetOfferSdp(const Message &request, Message &response);
+    int SetRemoteSdp(const Message &request, Message &response);
 
 private:
     static RoomMgr instance_;

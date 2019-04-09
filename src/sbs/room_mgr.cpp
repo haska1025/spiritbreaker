@@ -47,10 +47,6 @@ int RoomMgr::ReomvePublisher(const Message &request, Message &response)
     return SBS_SUCCESS;
 }
 
-int RoomMgr::SetOfferSdp(const Message &request, Message &response)
-{
-    return SBS_SUCCESS;
-}
 
 bool RoomMgr::AddRoom(std::shared_ptr<Room> r)
 {

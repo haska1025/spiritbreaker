@@ -2,7 +2,7 @@
 
 此项目是从webrtc源码中移植了rtc_base, api ,p2p相关模块。目的是用于后续支持ice协议的流媒体服务器开发。
 
-依赖的第三方库：boringssl, absl, jsoncpp
+依赖的第三方库：boringssl, abseil-cpp, jsoncpp, libsrtp
 
 ## build
 
@@ -39,3 +39,18 @@ cmake ..
 ```c
 sudo apt-get install libjsoncpp-dev
 ```
+
+### libsrtp
+
+github 路径：https://github.com/cisco/libsrtp
+
+这里用的是cisco开源的一个库，clone到本地，然后：
+
+ ./configure --enable-openssl CPPFLAGS="-DGCM"
+ 
+ make
+ 
+ 需要注意的是：webrtc用的时候，需要用到AES-GCM模式，因此需要加上宏GCM
+ 
+
+

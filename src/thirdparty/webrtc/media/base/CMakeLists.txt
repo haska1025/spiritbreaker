@@ -3,6 +3,14 @@ message("Build rtc_mediabase static library")
 file(GLOB rtc_mediabase_srcs 
         rtp_utils.cc
         turn_utils.cc
+        codec.cc
+        media_constants.cc
+        stream_params.cc
+        rid_description.cc
+        h264_profile_level_id.cc
+        vp9_profile.cc
+        media_channel.cc
+        media_engine.cc
 	)
 
 source_group(source FILES ${rtc_mediabase_srcs})

@@ -34,7 +34,7 @@ target_include_directories(sbs PUBLIC ../thirdparty/webrtc/)
 target_include_directories(sbs PUBLIC ../thirdparty/abseil-cpp/)
 target_include_directories(sbs PUBLIC ${JSONCPP_INCLUDE_DIRS})
 target_link_libraries(sbs 
-        rtc_pc rtc_p2p rtc_rtp_rtcp rtc_call rtc_api rtc_mediabase rtc_logging rtc_base rtc_systemwrappers
+        rtc_pc rtc_p2p rtc_rtp_rtcp rtc_call rtc_mediabase rtc_audio_processing rtc_api rtc_logging rtc_base rtc_systemwrappers
         srtp2 ssl crypto 
         absl_bad_optional_access absl_strings absl_base absl_throw_delegate
         ${JSONCPP_LIBRARIES})

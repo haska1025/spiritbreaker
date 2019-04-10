@@ -12,5 +12,6 @@ add_subdirectory(call)
 add_subdirectory(logging)
 add_subdirectory(media/base)
 add_subdirectory(modules/rtp_rtcp)
+add_subdirectory(modules/audio_processing)
 add_subdirectory(examples)
 

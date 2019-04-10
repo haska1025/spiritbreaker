@@ -40,6 +40,8 @@ file(GLOB rtc_pc_srcs
     jsep_ice_candidate.cc
     dtls_srtp_transport.cc
     dtls_transport.cc
+    channel_manager.cc
+    channel.cc
     )
 
 source_group(source FILES ${rtc_pc_srcs})

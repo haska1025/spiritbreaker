@@ -12,7 +12,7 @@ int WebRtcConnection::Initialize()
 {
     webrtc::JsepTransportController::Config config;
     transport_controller_.reset(new webrtc::JsepTransportController(
-                NULL,NULL, NULL, NULL, config));return 0;
+                NULL,NULL, NULL, NULL, config));
       return 0;
 }
 /*

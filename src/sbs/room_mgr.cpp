@@ -6,7 +6,7 @@
 
 #include <rtc_base/logging.h>
 
-RoomMgr::RoomMgr()
+RoomMgr::RoomMgr():media_session_factory_(&transport_desc_factory_, &id_generator_)
 {
 }
 RoomMgr RoomMgr::instance_;
@@ -14,6 +14,16 @@ RoomMgr RoomMgr::instance_;
 RoomMgr *RoomMgr::Instance()
 {
     return &instance_;
+}
+
+int RoomMgr::Initialize()
+{
+    //Create audio codecs
+    cricket::AudioCodecs audio_codecs;
+    media_session_factory_.set_audio_codecs(audio_codecs, audio_codecs);
+    //Create video codecs
+    cricket::VideoCodecs video_codecs;
+    media_session_factory_.set_video_codecs(video_codecs);
 }
 
 int RoomMgr::PeerJoinRoom(const Message &request, Message &response)

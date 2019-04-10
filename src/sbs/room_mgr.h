@@ -7,12 +7,18 @@
 #include <memory>
 #include <unordered_map>
 
+#include <rtc_base/unique_id_generator.h>
+#include <pc/media_session.h>
+#include <p2p/base/transport_description_factory.h>
+
 SBS_NAMESPACE_DECL_BEGIN
 class Room;
 class RoomMgr
 {
 public:
     static RoomMgr *Instance();
+    
+    int Initialize();
 
     bool AddRoom(std::shared_ptr<Room> r);
     bool RemoveRoom(uint32_t id);
@@ -30,6 +36,10 @@ private:
     static RoomMgr instance_;
     std::unordered_map<uint32_t, std::shared_ptr<Room>> rooms_;
     std::mutex rooms_mutex_;
+
+    cricket::MediaSessionDescriptionFactory media_session_factory_;
+    cricket::TransportDescriptionFactory transport_desc_factory_;
+    rtc::UniqueRandomIdGenerator id_generator_;
 
     SBS_DISALLOW_CONSTRUCT(RoomMgr);
     SBS_DISALLOW_COPY_CONSTRUCT(RoomMgr);

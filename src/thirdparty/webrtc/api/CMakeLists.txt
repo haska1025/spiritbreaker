@@ -5,7 +5,7 @@ set(rtc_api_VERSION 2.0.0)
 add_subdirectory(crypto)
 #add_subdirectory(ortc)
 #add_subdirectory(audio)
-#add_subdirectory(audio_codecs)
+add_subdirectory(audio_codecs)
 add_subdirectory(video)
 #add_subdirectory(video_codecs)
 add_subdirectory(transport)
@@ -17,14 +17,16 @@ file(GLOB rtc_api_srcs
     rtp_parameters.cc
     rtp_headers.cc
     media_transport_interface.cc
+    audio_options.cc
 	)
 
 source_group(source FILES ${rtc_api_srcs})
 
 add_library(rtc_api ${rtc_api_srcs}
-        $<TARGET_OBJECTS:rtc_crypto> 
-        $<TARGET_OBJECTS:rtc_video> 
-        $<TARGET_OBJECTS:rtc_transport> 
+        $<TARGET_OBJECTS:rtc_crypto>
+        $<TARGET_OBJECTS:rtc_video>
+        $<TARGET_OBJECTS:rtc_transport>
+        $<TARGET_OBJECTS:rtc_audiocodecs>
         )
 
 target_include_directories(rtc_api PUBLIC ..)

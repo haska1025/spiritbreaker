@@ -21,8 +21,8 @@ using ProtoString = std::string;
 
 #if WEBRTC_ENABLE_PROTOBUF
 
-#include "third_party/protobuf/src/google/protobuf/message_lite.h"
-#include "third_party/protobuf/src/google/protobuf/repeated_field.h"
+#include "google/protobuf/message_lite.h"
+#include "google/protobuf/repeated_field.h"
 
 namespace webrtc {
 

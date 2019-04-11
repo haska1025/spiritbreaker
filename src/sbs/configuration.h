@@ -38,7 +38,12 @@ template <typename T>
 int Configuration::GetCodecs(const std::string &mediatype, std::vector<T> &codecs)
 {
     std::string mode;
-    if (rtp_media_config[0]["mode"].isNull() || rtc::GetStringFromJson(rtp_media_config[0]["mode"], &mode)){
+    if (rtp_media_config[0]["mode"].isNull()){
+        RTC_LOG(LS_ERROR) << "Get media codes failed. the mode isn't exist.";
+        return SBS_ERROR_RTP_CFG_INVALID_MODE;
+    }
+
+    if (!rtc::GetStringFromJson(rtp_media_config[0]["mode"], &mode)){
         RTC_LOG(LS_ERROR) << "Get media codes failed. Invalid mode.";
         return SBS_ERROR_RTP_CFG_INVALID_MODE;
     }
@@ -79,6 +84,8 @@ int Configuration::GetCodecs(const std::string &mediatype, std::vector<T> &codec
 
         codecs.push_back(codec);
     }
+
+    return SBS_SUCCESS;
 }
 
 SBS_NAMESPACE_DECL_END

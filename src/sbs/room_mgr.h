@@ -32,6 +32,8 @@ public:
 
     int SetRemoteSdp(const Message &request, Message &response);
 
+    cricket::MediaSessionDescriptionFactory * media_session_desc_factory(){return &media_session_factory_;}
+
 private:
     static RoomMgr instance_;
     std::unordered_map<uint32_t, std::shared_ptr<Room>> rooms_;

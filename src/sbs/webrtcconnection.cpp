@@ -1,5 +1,6 @@
 #include "webrtcconnection.h"
-
+#include "room_mgr.h"
+#include "sbs_error.h"
 
 WebRtcConnection::WebRtcConnection()
 {
@@ -15,6 +16,21 @@ int WebRtcConnection::Initialize()
                 NULL,NULL, NULL, NULL, config));
       return 0;
 }
+
+int WebRtcConnection::CreateOffer()
+{
+    cricket::MediaSessionOptions options;
+
+    local_desc_ = RoomMgr::Instance()->media_session_desc_factory()->CreateOffer(options, NULL);
+    if (!local_desc_){
+        RTC_LOG(LS_ERROR) << "Create offer failed";
+        return SBS_GENERAL_ERROR;
+    }
+
+
+    return SBS_SUCCESS;
+}
+
 /*
 int WebRtcConnection::CreateLocalSdp()
 {

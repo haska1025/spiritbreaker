@@ -19,9 +19,14 @@ RoomMgr *RoomMgr::Instance()
 
 int RoomMgr::Initialize()
 {
+    int rc = SBS_SUCCESS;
+
     //Create audio codecs
     cricket::AudioCodecs audio_codecs;
-    Configuration::GetCodecs("audio", audio_codecs);
+    rc = Configuration::GetCodecs("audio", audio_codecs);
+    if (rc != SBS_SUCCESS)
+        return rc;
+
     std::for_each(audio_codecs.begin(), audio_codecs.end(), [](const cricket::AudioCodec &codec){
             RTC_LOG(LS_INFO) << "audio===" << codec.ToString();
             });
@@ -29,8 +34,17 @@ int RoomMgr::Initialize()
     media_session_factory_.set_audio_codecs(audio_codecs, audio_codecs);
     //Create video codecs
     cricket::VideoCodecs video_codecs;
-    Configuration::GetCodecs("video", video_codecs);
+    rc = Configuration::GetCodecs("video", video_codecs);
+    if (rc != SBS_SUCCESS)
+        return rc;
+
+    std::for_each(video_codecs.begin(), video_codecs.end(), [](const cricket::VideoCodec &codec){
+            RTC_LOG(LS_INFO) << "video===" << codec.ToString();
+            });
+
     media_session_factory_.set_video_codecs(video_codecs);
+
+    return rc;
 }
 
 int RoomMgr::PeerJoinRoom(const Message &request, Message &response)

@@ -3,6 +3,7 @@
 #include "sbs_error.h"
 #include "httpcommon.h"
 #include "peer.h"
+#include "configuration.h"
 
 #include <rtc_base/logging.h>
 
@@ -20,9 +21,15 @@ int RoomMgr::Initialize()
 {
     //Create audio codecs
     cricket::AudioCodecs audio_codecs;
+    Configuration::GetCodecs("audio", audio_codecs);
+    std::for_each(audio_codecs.begin(), audio_codecs.end(), [](const cricket::AudioCodec &codec){
+            RTC_LOG(LS_INFO) << "audio===" << codec.ToString();
+            });
+
     media_session_factory_.set_audio_codecs(audio_codecs, audio_codecs);
     //Create video codecs
     cricket::VideoCodecs video_codecs;
+    Configuration::GetCodecs("video", video_codecs);
     media_session_factory_.set_video_codecs(video_codecs);
 }
 

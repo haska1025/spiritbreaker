@@ -121,7 +121,7 @@ int CommandHandler::__SetBody(rtc::StreamInterface *document, const std::string 
 int CommandHandler::__JsonToMessage(const Json::Value &req, Message &m)
 {
     uint32_t rid = 0;
-    if (req["roomid"].isNull() || !GetUIntFromJson(req["roomid"], &rid)){
+    if (req["roomid"].isNull() || !rtc::GetUIntFromJson(req["roomid"], &rid)){
         RTC_LOG(LS_ERROR) << "Peer join room invalid roomid";
         return SBS_ERROR_INVALID_PARAM;
     }
@@ -129,7 +129,7 @@ int CommandHandler::__JsonToMessage(const Json::Value &req, Message &m)
     m.room_id(rid);
 
     std::string cmd;
-    if (req["cmd"].isNull() || !GetStringFromJson(req["cmd"], &cmd)){
+    if (req["cmd"].isNull() || !rtc::GetStringFromJson(req["cmd"], &cmd)){
         RTC_LOG(LS_ERROR) << "Peer join room invalid cmd";
         return SBS_ERROR_INVALID_PARAM;
     }
@@ -137,7 +137,7 @@ int CommandHandler::__JsonToMessage(const Json::Value &req, Message &m)
     m.cmd_type(cmd);
 
     uint32_t pid = 0;
-    if (req["peerid"].isNull() || !GetUIntFromJson(req["peerid"], &pid)){
+    if (req["peerid"].isNull() || !rtc::GetUIntFromJson(req["peerid"], &pid)){
         RTC_LOG(LS_ERROR) << "Peer join room invalid peerid";
         return SBS_ERROR_INVALID_PARAM;
     }

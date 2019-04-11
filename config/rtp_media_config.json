@@ -1,7 +1,12 @@
+[
+{
+        "mode":"default"
+}
+,
 {
    "default":{
        "rtpMappings": {
-           "vp8":{
+           "video":[{
                "payloadType": "100",
                "encodingName": "VP8",
                "clockRate": "90000",
@@ -13,14 +18,14 @@
                    "nack pli",
                    "goog-remb"
                ]
-           },
-           "opus": {
+           }],
+           "audio": [{
                "payloadType": "111",
                "encodingName": "opus",
                "clockRate": "48000",
                "channels": "2",
                "mediaType": "audio"
-           }
+           }]
        },
        "extMappings": [
           "urn:ietf:params:rtp-hdrext:ssrc-audio-level",
@@ -34,7 +39,7 @@
 
    "vp9_and_opus": {
        "rtpMappings": {
-           "vp8":{
+           "video":[{
                "payloadType": "100",
                "encodingName": "VP9",
                "clockRate": "90000",
@@ -46,14 +51,14 @@
                    "nack pli",
                    "goog-remb"
                ]
-           },
-           "opus": {
+           }],
+           "audio": [{
                "payloadType": "111",
                "encodingName": "opus",
                "clockRate": "48000",
                "channels": "2",
                "mediaType": "audio"
-           }
+           }]
        },
        "extMappings": [
           "urn:ietf:params:rtp-hdrext:ssrc-audio-level",
@@ -66,6 +71,7 @@
    },
    "h264_and_opus":{
        "rtpMappings":{
+           "video":[{
              "payloadType": "101",
              "encodingName": "H264",
              "clockRate": "90000",
@@ -82,6 +88,14 @@
                  "nack pli",
                  "goog-remb"
              ]
+           }],
+           "audio": [{
+               "payloadType": "111",
+               "encodingName": "opus",
+               "clockRate": "48000",
+               "channels": "2",
+               "mediaType": "audio"
+           }]
        },
        "extMappings": [
           "urn:ietf:params:rtp-hdrext:ssrc-audio-level",
@@ -93,4 +107,4 @@
       ]
    }
 }
-
+]

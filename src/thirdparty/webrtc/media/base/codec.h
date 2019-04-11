@@ -143,6 +143,7 @@ struct AudioCodec : public Codec {
 };
 
 struct RTC_EXPORT VideoCodec : public Codec {
+  size_t channels;
   // Creates a codec with the given parameters.
   VideoCodec(int id, const std::string& name);
   // Creates a codec with the given name and empty id.

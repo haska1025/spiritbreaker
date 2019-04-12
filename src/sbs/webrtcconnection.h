@@ -2,8 +2,10 @@
 #define _WEBRTCCONNECTION_H_
 
 #include "sbs_decl.h"
+
 #include <pc/session_description.h>
 #include <pc/jsep_transport_controller.h>
+#include <api/jsep.h>
 
 #include <memory>
 
@@ -17,16 +19,23 @@ public:
 
     int Initialize();
 
-    int CreateOffer();
+    int SetRemoteSdp(const std::string &sdp);
     int CreateAnswer();
-    int SetRemoteSdp(cricket::SessionDescription *offer);
-    std::string GetLocalSdp();
+    std::string GetLocalSdp(){return local_sdp_;}
+    std::string GetRemoteSdp(){return remote_sdp_;}
 
 private:
-    std::unique_ptr<webrtc::JsepTransportController> transport_controller_;
-    std::unique_ptr<cricket::SessionDescription> local_desc_;
-    std::unique_ptr<cricket::SessionDescription> remote_desc_;
+    std::string session_id_;
+    uint64_t session_version_{2};
+
+    std::unique_ptr<webrtc::JsepTransportController> transport_controller_{nullptr};
+    // Create by create answer
+    std::unique_ptr<webrtc::SessionDescriptionInterface> local_desc_{nullptr};
+    // Come from remote endpoint
+    std::unique_ptr<webrtc::SessionDescriptionInterface> remote_desc_{nullptr};
+    // The answer sdp
     std::string local_sdp_;
+    // The remote sdp
     std::string remote_sdp_;
 };
 

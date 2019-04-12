@@ -7,7 +7,13 @@
 
 #include <unistd.h>
 #include <string.h>
+#include <fstream>
+#include <iostream>
 #include "../../src/sbs/webrtcconnection.h"
+#include "../../src/sbs/sbs_log.h"
+#include "../../src/sbs/sbs_mgr.h"
+#include "../../src/sbs/room_mgr.h"
+#include "../../src/sbs/configuration.h"
 
 using namespace CPPUNIT_NS;
 
@@ -17,7 +23,22 @@ public:
     static void test_CreateOffer()
     {
         WebRtcConnection conn;
-        CPPUNIT_ASSERT(0==conn.CreateOffer());
+
+        std::ifstream offer_stream("/home/haska/spiritbreaker/build/test/ut/offer.sdp");
+
+        CPPUNIT_ASSERT(offer_stream);
+
+        std::stringstream strStream;
+        std::string offer;
+
+        strStream << offer_stream.rdbuf();
+        offer=strStream.str();
+
+        std::cout << offer << std::endl;
+
+        CPPUNIT_ASSERT(0==conn.Initialize());
+        CPPUNIT_ASSERT(0==conn.SetRemoteSdp(offer));
+        CPPUNIT_ASSERT(0==conn.CreateAnswer());
     }
 };
 
@@ -29,6 +50,18 @@ class TestSBS : public TestFixture
 public:
     void setUp()
     {
+        int rc = 0;
+        
+        rc = Configuration::Initialize();
+        if (rc != 0){
+            RTC_LOG(LS_ERROR) << "Initialize configuration failed! rc="<< rc;
+            exit(-1);
+        }
+
+        rc = RoomMgr::Instance()->Initialize();
+        if (rc != 0){
+            exit(-1);
+        }
     }
     void setDown()
     {

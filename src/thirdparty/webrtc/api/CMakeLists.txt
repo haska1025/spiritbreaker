@@ -18,6 +18,8 @@ file(GLOB rtc_api_srcs
     rtp_headers.cc
     media_transport_interface.cc
     audio_options.cc
+    jsep.cc
+    jsep_ice_candidate.cc
 	)
 
 source_group(source FILES ${rtc_api_srcs})

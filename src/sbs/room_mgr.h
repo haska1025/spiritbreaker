@@ -7,9 +7,6 @@
 #include <memory>
 #include <unordered_map>
 
-#include <rtc_base/unique_id_generator.h>
-#include <pc/media_session.h>
-#include <p2p/base/transport_description_factory.h>
 #include <api/peer_connection_interface.h>
 
 SBS_NAMESPACE_DECL_BEGIN
@@ -33,19 +30,13 @@ public:
 
     int SetRemoteSdp(const Message &request, Message &response);
 
-    cricket::MediaSessionDescriptionFactory * media_session_desc_factory(){return &media_session_factory_;}
-
+    rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface> pc_factory(){return peer_connection_factory_;}
 private:
     static RoomMgr instance_;
     std::unordered_map<uint32_t, std::shared_ptr<Room>> rooms_;
     std::mutex rooms_mutex_;
 
-    rtc::scoped_refptr<webrtc::PeerConnectionInterface> peer_connection_;
     rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface> peer_connection_factory_;
-
-    cricket::MediaSessionDescriptionFactory media_session_factory_;
-    cricket::TransportDescriptionFactory transport_desc_factory_;
-    rtc::UniqueRandomIdGenerator id_generator_;
 
     SBS_DISALLOW_CONSTRUCT(RoomMgr);
     SBS_DISALLOW_COPY_CONSTRUCT(RoomMgr);

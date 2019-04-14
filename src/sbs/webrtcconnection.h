@@ -3,15 +3,14 @@
 
 #include "sbs_decl.h"
 
-#include <pc/session_description.h>
-#include <pc/jsep_transport_controller.h>
 #include <api/jsep.h>
+#include <api/peer_connection_interface.h>
 
 #include <memory>
 
 SBS_NAMESPACE_DECL_BEGIN
 
-class WebRtcConnection
+class WebRtcConnection: public webrtc::PeerConnectionObserver, public webrtc::CreateSessionDescriptionObserver
 {
 public:
     WebRtcConnection();
@@ -24,11 +23,27 @@ public:
     std::string GetLocalSdp(){return local_sdp_;}
     std::string GetRemoteSdp(){return remote_sdp_;}
 
-private:
-    std::string session_id_;
-    uint64_t session_version_{2};
+    //
+    // PeerConnectionObserver implementation.
+    //
+    
+    void OnSignalingChange( webrtc::PeerConnectionInterface::SignalingState new_state) override{};
+    void OnAddTrack( rtc::scoped_refptr<webrtc::RtpReceiverInterface> receiver, const std::vector<rtc::scoped_refptr<webrtc::MediaStreamInterface>>& streams) override{};
+    void OnRemoveTrack(rtc::scoped_refptr<webrtc::RtpReceiverInterface> receiver) override{};
+    void OnDataChannel( rtc::scoped_refptr<webrtc::DataChannelInterface> channel) override {}
+    void OnRenegotiationNeeded() override {}
+    void OnIceConnectionChange( webrtc::PeerConnectionInterface::IceConnectionState new_state) override{};
+    void OnIceGatheringChange( webrtc::PeerConnectionInterface::IceGatheringState new_state) override{};
+    void OnIceCandidate(const webrtc::IceCandidateInterface* candidate) override{};
+    void OnIceConnectionReceivingChange(bool receiving) override {}
 
-    std::unique_ptr<webrtc::JsepTransportController> transport_controller_{nullptr};
+    // CreateSessionDescriptionObserver implementation.
+    void OnSuccess(webrtc::SessionDescriptionInterface* desc) override{};
+    void OnFailure(webrtc::RTCError error) override{};
+    
+private:
+    rtc::scoped_refptr<webrtc::PeerConnectionInterface> peer_connection_;
+
     // Create by create answer
     std::unique_ptr<webrtc::SessionDescriptionInterface> local_desc_{nullptr};
     // Come from remote endpoint

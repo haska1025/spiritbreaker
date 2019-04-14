@@ -18,7 +18,7 @@
 #include "api/video_codecs/video_encoder_factory.h"
 
 
-RoomMgr::RoomMgr():media_session_factory_(&transport_desc_factory_, &id_generator_)
+RoomMgr::RoomMgr()
 {
 }
 RoomMgr RoomMgr::instance_;
@@ -42,7 +42,7 @@ int RoomMgr::Initialize()
             RTC_LOG(LS_INFO) << "audio===" << codec.ToString();
             });
 
-    media_session_factory_.set_audio_codecs(audio_codecs, audio_codecs);
+    //media_session_factory_.set_audio_codecs(audio_codecs, audio_codecs);
     //Create video codecs
     cricket::VideoCodecs video_codecs;
     rc = Configuration::GetCodecs("video", video_codecs);
@@ -53,7 +53,7 @@ int RoomMgr::Initialize()
             RTC_LOG(LS_INFO) << "video===" << codec.ToString();
             });
 
-    media_session_factory_.set_video_codecs(video_codecs);
+    //media_session_factory_.set_video_codecs(video_codecs);
 
 
     webrtc::PeerConnectionFactoryDependencies dependencies;

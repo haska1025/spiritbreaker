@@ -42,6 +42,8 @@ source_group(source FILES ${sbs_srcs})
 link_directories(../thirdparty/boringssl/build/ssl)
 link_directories(../thirdparty/boringssl/build/crypto)
 link_directories(../thirdparty/libsrtp/)
+link_directories(../thirdparty/libjpeg/build)
+link_directories(../thirdparty/libyuv/build)
 
 link_directories(../thirdparty/abseil-cpp/build/absl/strings)
 link_directories(../thirdparty/abseil-cpp/build/absl/base)
@@ -58,7 +60,8 @@ target_include_directories(sbs PUBLIC ../thirdparty/webrtc/)
 target_include_directories(sbs PUBLIC ../thirdparty/abseil-cpp/)
 target_include_directories(sbs PUBLIC ${JSONCPP_INCLUDE_DIRS})
 target_link_libraries(spiritbreaker sbs 
-        rtc_pc rtc_p2p rtc_call rtc_rtp_rtcp rtc_mediabase rtc_audio_processing rtc_api rtc_logging rtc_base rtc_systemwrappers
+        rtc_pc rtc_p2p rtc_call rtc_rtp_rtcp rtc_mediabase rtc_audio_processing rtc_stats rtc_api rtc_logging rtc_base rtc_systemwrappers
+        yuv jpeg
         srtp2 ssl crypto 
         absl_bad_optional_access absl_strings absl_base absl_throw_delegate
         ${JSONCPP_LIBRARIES})

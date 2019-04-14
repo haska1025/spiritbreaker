@@ -31,6 +31,7 @@ file(GLOB rtc_logging_srcs
     rtc_event_log/events/rtc_event_rtp_packet_outgoing.cc
     rtc_event_log/events/rtc_event_video_receive_stream_config.cc
     rtc_event_log/events/rtc_event_video_send_stream_config.cc
+    rtc_event_log/output/rtc_event_log_output_file.cc
 	)
 
 source_group(source FILES ${rtc_logging_srcs})

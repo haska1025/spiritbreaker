@@ -10,6 +10,8 @@ source_group(source FILES ${ut_srcs})
 link_directories(../../src/thirdparty/boringssl/build/ssl)
 link_directories(../../src/thirdparty/boringssl/build/crypto)
 link_directories(../../src/thirdparty/libsrtp/)
+link_directories(../../src/thirdparty/libjpeg/build)
+link_directories(../../src/thirdparty/libyuv/build)
 
 link_directories(../../src/thirdparty/abseil-cpp/build/absl/strings)
 link_directories(../../src/thirdparty/abseil-cpp/build/absl/base)
@@ -25,7 +27,8 @@ target_include_directories(sbs_ut PUBLIC ../thirdparty/webrtc/)
 target_include_directories(sbs_ut PUBLIC ../thirdparty/abseil-cpp/)
 target_include_directories(sbs_ut PUBLIC ${JSONCPP_INCLUDE_DIRS})
 target_link_libraries(sbs_ut sbs 
-        rtc_pc rtc_p2p rtc_call rtc_rtp_rtcp rtc_mediabase rtc_audio_processing rtc_api rtc_logging rtc_base rtc_systemwrappers
+        rtc_pc rtc_p2p rtc_call rtc_rtp_rtcp rtc_mediabase rtc_audio_processing rtc_stats rtc_api rtc_logging rtc_base rtc_systemwrappers
+        yuv jpeg
         srtp2 ssl crypto 
         absl_bad_optional_access absl_strings absl_base absl_throw_delegate
         ${JSONCPP_LIBRARIES}

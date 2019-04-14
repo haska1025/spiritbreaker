@@ -2,6 +2,7 @@ message("Build rtc_call static library")
 
 file(GLOB rtc_call_srcs 
         rtp_demuxer.cc
+        call_config.cc
 	)
 
 source_group(source FILES ${rtc_call_srcs})

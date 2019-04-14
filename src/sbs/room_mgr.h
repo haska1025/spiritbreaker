@@ -10,6 +10,7 @@
 #include <rtc_base/unique_id_generator.h>
 #include <pc/media_session.h>
 #include <p2p/base/transport_description_factory.h>
+#include <api/peer_connection_interface.h>
 
 SBS_NAMESPACE_DECL_BEGIN
 class Room;
@@ -38,6 +39,9 @@ private:
     static RoomMgr instance_;
     std::unordered_map<uint32_t, std::shared_ptr<Room>> rooms_;
     std::mutex rooms_mutex_;
+
+    rtc::scoped_refptr<webrtc::PeerConnectionInterface> peer_connection_;
+    rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface> peer_connection_factory_;
 
     cricket::MediaSessionDescriptionFactory media_session_factory_;
     cricket::TransportDescriptionFactory transport_desc_factory_;

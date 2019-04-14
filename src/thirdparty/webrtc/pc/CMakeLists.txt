@@ -5,43 +5,51 @@ set(rtc_pc_VERSION 2.0.0)
 
 
 file(GLOB rtc_pc_srcs 
-    webrtc_sdp.cc
-    transport_stats.cc
-    track_media_info_map.cc
-    stats_collector.cc
-    simulcast_description.cc
-    srtp_filter.cc
-    srtp_session.cc
-    srtp_transport.cc
-    sdp_serializer.cc
-    sdp_utils.cc
-    session_description.cc
-    rtp_transceiver.cc
-    rtp_transport.cc
-    sctp_utils.cc
-    rtp_parameters_conversion.cc
-    rtp_receiver.cc
-    rtp_sender.cc
-    rtcp_mux_filter.cc
-    rtc_stats_traversal.cc
-    rtp_media_utils.cc
-    remote_audio_source.cc
-    rtc_stats_collector.cc
-    media_stream.cc
-    media_stream_observer.cc
-    local_audio_source.cc
-    media_session.cc
-    jsep_session_description.cc
-    jsep_transport.cc
-    jsep_transport_controller.cc
+    audio_track.cc
+    channel.cc
+    channel_manager.cc
+    data_channel.cc
+    dtls_srtp_transport.cc
+    dtls_transport.cc
     dtmf_sender.cc
     external_hmac.cc
     ice_server_parsing.cc
     jsep_ice_candidate.cc
-    dtls_srtp_transport.cc
-    dtls_transport.cc
-    channel_manager.cc
-    channel.cc
+    jsep_session_description.cc
+    jsep_transport.cc
+    jsep_transport_controller.cc
+    local_audio_source.cc
+    media_session.cc
+    media_stream.cc
+    media_stream_observer.cc
+    peer_connection.cc
+    peer_connection_factory.cc
+    remote_audio_source.cc
+    rtcp_mux_filter.cc
+    rtc_stats_collector.cc
+    rtc_stats_traversal.cc
+    rtp_media_utils.cc
+    rtp_parameters_conversion.cc
+    rtp_receiver.cc
+    rtp_sender.cc
+    rtp_transceiver.cc
+    rtp_transport.cc
+    sctp_utils.cc
+    sdp_serializer.cc
+    sdp_utils.cc
+    session_description.cc
+    simulcast_description.cc
+    srtp_filter.cc
+    srtp_session.cc
+    srtp_transport.cc
+    stats_collector.cc
+    track_media_info_map.cc
+    transport_stats.cc
+    video_capturer_track_source.cc
+    video_track.cc
+    video_track_source.cc
+    webrtc_sdp.cc
+    webrtc_session_description_factory.cc
     )
 
 source_group(source FILES ${rtc_pc_srcs})

@@ -12,15 +12,28 @@ add_subdirectory(transport)
 #add_subdirectory(task_queue)
 
 file(GLOB rtc_api_srcs 
-	candidate.cc
-    rtc_error.cc
-    rtp_parameters.cc
-    rtp_headers.cc
-    media_transport_interface.cc
-    audio_options.cc
-    jsep.cc
-    jsep_ice_candidate.cc
-	)
+        stats/rtcstats_objects.h
+        stats/rtc_stats_report.h
+        audio_options.cc
+        candidate.cc
+        create_peerconnection_factory.cc
+        data_channel_interface.cc
+        jsep.cc
+        jsep_ice_candidate.cc
+        media_constraints_interface.cc
+        media_stream_interface.cc
+        media_transport_interface.cc
+        media_types.cc
+        peer_connection_interface.cc
+        proxy.cc
+        rtc_error.cc
+        rtp_headers.cc
+        rtp_parameters.cc
+        rtp_receiver_interface.cc
+        rtp_sender_interface.cc
+        rtp_transceiver_interface.cc
+        stats_types.cc
+)
 
 source_group(source FILES ${rtc_api_srcs})
 
@@ -29,11 +42,11 @@ add_library(rtc_api ${rtc_api_srcs}
         $<TARGET_OBJECTS:rtc_video>
         $<TARGET_OBJECTS:rtc_transport>
         $<TARGET_OBJECTS:rtc_audiocodecs>
+#        $<TARGET_OBJECTS:rtc_videocodecs>
         )
 
-target_include_directories(rtc_api PUBLIC ..)
+target_include_directories(rtc_api PUBLIC ../)
 target_include_directories(rtc_api PUBLIC ../../abseil-cpp/)
-target_include_directories(rtc_api PUBLIC ../../boringssl/src/include/)
 
 if(WIN32)
 	add_definitions(-DWEBRTC_WIN)

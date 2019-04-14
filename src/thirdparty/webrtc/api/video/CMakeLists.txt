@@ -5,16 +5,24 @@ file(GLOB rtc_video_srcs
         encoded_frame.cc
         encoded_image.cc
         hdr_metadata.cc
+        video_bitrate_allocation.cc
         video_content_type.cc
+        video_frame_buffer.cc
+        video_frame.cc
+        video_source_interface.cc
+        video_timing.cc
+        i420_buffer.cc
 	)
 
 source_group(source FILES ${rtc_video_srcs})
 
 add_library(rtc_video OBJECT ${rtc_video_srcs})
 
+target_include_directories(rtc_video PUBLIC ..)
 target_include_directories(rtc_video PUBLIC ../..)
+target_include_directories(rtc_video PUBLIC ../../../)
+target_include_directories(rtc_video PUBLIC ../../../libyuv/include)
 target_include_directories(rtc_video PUBLIC ../../../abseil-cpp/)
-target_include_directories(rtc_video PUBLIC ../../../boringssl/src/include/)
 
 if(WIN32)
 	add_definitions(-DWEBRTC_WIN)

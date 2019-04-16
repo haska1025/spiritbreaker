@@ -10,7 +10,8 @@
 
 SBS_NAMESPACE_DECL_BEGIN
 
-class WebRtcConnection: public webrtc::PeerConnectionObserver, public webrtc::CreateSessionDescriptionObserver
+class WebRtcConnection: public webrtc::PeerConnectionObserver,
+    public webrtc::CreateSessionDescriptionObserver
 {
 public:
     WebRtcConnection();
@@ -42,7 +43,7 @@ public:
     void OnFailure(webrtc::RTCError error) override{};
     
 private:
-    rtc::scoped_refptr<webrtc::PeerConnectionInterface> peer_connection_;
+    rtc::scoped_refptr<webrtc::PeerConnectionInterface> peer_connection_{nullptr};
 
     // Create by create answer
     std::unique_ptr<webrtc::SessionDescriptionInterface> local_desc_{nullptr};

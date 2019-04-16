@@ -59,9 +59,18 @@ int RoomMgr::Initialize()
     webrtc::PeerConnectionFactoryDependencies dependencies;
     peer_connection_factory_ = webrtc::CreateModularPeerConnectionFactory(std::move(dependencies));
 
-    if (!peer_connection_factory_) {
-        return false;
-    }
+//    peer_connection_factory_ = webrtc::CreatePeerConnectionFactory(
+//            nullptr /* network_thread */, nullptr /* worker_thread */,
+//            nullptr /* signaling_thread */, nullptr /* default_adm */,
+//            webrtc::CreateBuiltinAudioEncoderFactory(),
+//            webrtc::CreateBuiltinAudioDecoderFactory(),
+//            webrtc::CreateBuiltinVideoEncoderFactory(),
+//            webrtc::CreateBuiltinVideoDecoderFactory(), nullptr /* audio_mixer */,
+//            nullptr /* audio_processing */);
+//
+//    if (!peer_connection_factory_) {
+//        return false;
+//    }
 
     return rc;
 }
@@ -126,5 +135,4 @@ std::shared_ptr<Room> RoomMgr::GetRoom(uint32_t id)
     }
     return std::shared_ptr<Room>(nullptr);
 }
-
 

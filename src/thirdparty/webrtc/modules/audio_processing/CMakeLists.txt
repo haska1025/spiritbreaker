@@ -2,6 +2,23 @@ message("Build rtc_audio_processing static library")
 
 file(GLOB rtc_audio_processing_srcs 
         include/audio_processing_statistics.cc
+#        audio_buffer.cc
+#        audio_processing_impl.cc
+#        echo_cancellation_impl.cc
+#        echo_control_mobile_impl.cc
+#        gain_control_for_experimental_agc.cc
+#        gain_control_impl.cc
+#        gain_controller2.cc
+#        level_estimator_impl.cc
+#        low_cut_filter.cc
+#        noise_suppression_impl.cc
+#        noise_suppression_proxy.cc
+#        residual_echo_detector.cc
+#        rms_level.cc
+#        splitting_filter.cc
+#        three_band_filter_bank.cc
+#        typing_detection.cc
+#        voice_detection_impl.cc
 )
 
 source_group(source FILES ${rtc_audio_processing_srcs})

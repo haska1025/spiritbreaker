@@ -22,9 +22,11 @@ class TestWebRtcConnection
 public:
     static void test_CreateOffer()
     {
-        WebRtcConnection conn;
+        rtc::scoped_refptr<WebRtcConnection> conn(new rtc::RefCountedObject<WebRtcConnection>());
 
-        std::ifstream offer_stream("/home/haska/spiritbreaker/build/test/ut/offer.sdp");
+        std::string exedir = Configuration::GetExeDir();
+        CPPUNIT_ASSERT(!exedir.empty());
+        std::ifstream offer_stream(exedir + "/offer.sdp");
 
         CPPUNIT_ASSERT(offer_stream);
 
@@ -36,9 +38,9 @@ public:
 
         std::cout << offer << std::endl;
 
-        CPPUNIT_ASSERT(0==conn.Initialize());
-        CPPUNIT_ASSERT(0==conn.SetRemoteSdp(offer));
-        CPPUNIT_ASSERT(0==conn.CreateAnswer());
+        CPPUNIT_ASSERT(0==conn->Initialize());
+        CPPUNIT_ASSERT(0==conn->SetRemoteSdp(offer));
+        CPPUNIT_ASSERT(0==conn->CreateAnswer());
     }
 };
 

@@ -7,7 +7,7 @@ add_subdirectory(crypto)
 #add_subdirectory(audio)
 add_subdirectory(audio_codecs)
 add_subdirectory(video)
-#add_subdirectory(video_codecs)
+add_subdirectory(video_codecs)
 add_subdirectory(transport)
 #add_subdirectory(task_queue)
 
@@ -42,7 +42,7 @@ add_library(rtc_api ${rtc_api_srcs}
         $<TARGET_OBJECTS:rtc_video>
         $<TARGET_OBJECTS:rtc_transport>
         $<TARGET_OBJECTS:rtc_audiocodecs>
-#        $<TARGET_OBJECTS:rtc_videocodecs>
+        $<TARGET_OBJECTS:rtc_videocodecs>
         )
 
 target_include_directories(rtc_api PUBLIC ../)

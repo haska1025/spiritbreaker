@@ -37,11 +37,11 @@ int WebRtcConnection::Initialize()
     config.sdp_semantics = webrtc::SdpSemantics::kUnifiedPlan;
     config.enable_dtls_srtp = true;
     webrtc::PeerConnectionInterface::IceServer server;
-    //server.uri = GetPeerConnectionString();
+    server.uri = "stun:192.168.32.86:3478"; 
     config.servers.push_back(server);
 
     peer_connection_ = RoomMgr::Instance()->pc_factory()->CreatePeerConnection(
-            config, nullptr, nullptr, nullptr);
+            config, nullptr, nullptr, this);
     if ( peer_connection_ == nullptr){
         RTC_LOG(LS_ERROR) << "Create peer connection failed.";
         return -1;

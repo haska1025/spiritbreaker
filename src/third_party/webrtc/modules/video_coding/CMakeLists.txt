@@ -12,8 +12,11 @@ add_library(rtc_videocoding OBJECT ${rtc_videocoding_srcs})
 
 target_include_directories(rtc_videocoding PUBLIC ../../)
 target_include_directories(rtc_videocoding PUBLIC ../../..)
+target_include_directories(rtc_videocoding PUBLIC ../../../../)
 target_include_directories(rtc_videocoding PUBLIC ../../../ffmpeg/)
 target_include_directories(rtc_videocoding PUBLIC ../../../abseil-cpp/)
+target_include_directories(rtc_videocoding PUBLIC ../../../libyuv/include/)
+target_include_directories(rtc_videocoding PUBLIC ../../../libvpx/source/libvpx/)
 
 if(WIN32)
 	add_definitions(-DWEBRTC_WIN)

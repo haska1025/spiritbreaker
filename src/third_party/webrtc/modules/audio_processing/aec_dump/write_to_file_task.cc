@@ -42,7 +42,7 @@ bool WriteToFileTask::Run() {
   ProtoString event_string;
   event_.SerializeToString(&event_string);
 
-  const size_t event_byte_size = event_.ByteSizeLong();
+  const size_t event_byte_size = event_.ByteSize();
 
   if (!IsRoomForNextEvent(event_byte_size)) {
     // Ensure that no further events are written, even if they're smaller than

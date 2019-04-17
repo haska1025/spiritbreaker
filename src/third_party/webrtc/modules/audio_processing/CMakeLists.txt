@@ -9,15 +9,31 @@ list(FILTER  rtc_audioprocessing_srcs EXCLUDE REGEX ".*mock.*")
 list(FILTER  rtc_audioprocessing_srcs EXCLUDE REGEX ".*mips.*")
 list(FILTER  rtc_audioprocessing_srcs EXCLUDE REGEX ".*arm.*")
 list(FILTER  rtc_audioprocessing_srcs EXCLUDE REGEX ".*neon.*")
-list(FILTER  rtc_audioprocessing_srcs EXCLUDE REGEX ".*dump.*")
+#list(FILTER  rtc_audioprocessing_srcs EXCLUDE REGEX ".*dump.*")
 list(FILTER  rtc_audioprocessing_srcs EXCLUDE REGEX "fixed_gain_controller.cc")
 
-add_library(rtc_audioprocessing OBJECT ${rtc_audioprocessing_srcs})
+find_package(Protobuf REQUIRED)
+if(PROTOBUF_FOUND)
+    message(STATUS "protobuf library found")
+else()
+    message(FATAL_ERROR "protobuf library is needed but cant be found")
+endif()
+
+message("protobuf path: ${PROTOBUF_INCLUDE_DIRS}")
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS
+        debug.proto
+        )
+
+
+add_library(rtc_audioprocessing OBJECT ${rtc_audioprocessing_srcs}  ${PROTO_SRCS} ${PROTO_HDRS})
 
 target_include_directories(rtc_audioprocessing PUBLIC ../../)
 target_include_directories(rtc_audioprocessing PUBLIC ../../..)
 target_include_directories(rtc_audioprocessing PUBLIC ../)
 target_include_directories(rtc_audioprocessing PUBLIC ../../../abseil-cpp/)
+target_include_directories(rtc_audioprocessing PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/../../)
 
 if(WIN32)
 	add_definitions(-DWEBRTC_WIN)

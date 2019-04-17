@@ -31,6 +31,7 @@ add_library(webrtc STATIC
 	$<TARGET_OBJECTS:rtc_audiothird> 
 	$<TARGET_OBJECTS:rtc_audiocoding> 
 	$<TARGET_OBJECTS:rtc_audioprocessing> 
+	$<TARGET_OBJECTS:rtc_videocoding> 
 	$<TARGET_OBJECTS:rtc_media> 
 	$<TARGET_OBJECTS:rtc_stats> 
 	$<TARGET_OBJECTS:rtc_call> 

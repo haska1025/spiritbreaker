@@ -39,15 +39,17 @@ file(GLOB sbs_srcs
 source_group(source FILES ${sbs_srcs})
 
 
-link_directories(../thirdparty/boringssl/build/ssl)
-link_directories(../thirdparty/boringssl/build/crypto)
-link_directories(../thirdparty/libsrtp/)
-link_directories(../thirdparty/libjpeg/build)
-link_directories(../thirdparty/libyuv/build)
+link_directories(../third_party/boringssl/build/ssl)
+link_directories(../third_party/boringssl/build/crypto)
+link_directories(../third_party/libsrtp/)
+link_directories(../third_party/libjpeg/build)
+link_directories(../third_party/libyuv/build)
+link_directories(../third_party/libvpx/source/libvpx)
+link_directories(../third_party/rnnoise/build)
 
-link_directories(../thirdparty/abseil-cpp/build/absl/strings)
-link_directories(../thirdparty/abseil-cpp/build/absl/base)
-link_directories(../thirdparty/abseil-cpp/build/absl/types/)
+link_directories(../third_party/abseil-cpp/build/absl/strings)
+link_directories(../third_party/abseil-cpp/build/absl/base)
+link_directories(../third_party/abseil-cpp/build/absl/types/)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
@@ -56,12 +58,13 @@ add_library(sbs ${sbs_srcs})
 
 add_executable(spiritbreaker sbs_main.cpp ${sbs_srcs})
 
-target_include_directories(sbs PUBLIC ../thirdparty/webrtc/)
-target_include_directories(sbs PUBLIC ../thirdparty/abseil-cpp/)
+target_include_directories(sbs PUBLIC ../third_party/webrtc/)
+target_include_directories(sbs PUBLIC ../third_party/abseil-cpp/)
 target_include_directories(sbs PUBLIC ${JSONCPP_INCLUDE_DIRS})
 target_link_libraries(spiritbreaker sbs 
         webrtc
         yuv jpeg
+        vpx rnnoise
         srtp2 ssl crypto 
         absl_bad_optional_access absl_strings absl_base absl_throw_delegate
         ${JSONCPP_LIBRARIES})

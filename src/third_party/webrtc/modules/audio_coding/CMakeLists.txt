@@ -1,25 +1,24 @@
 message("Build rtc_audiocoding static library")
 
-file(GLOB rtc_audiocoding_srcs 
-        include/*.h
-                 acm2/*.h acm2/*.cc acm2/*.c 
-                 audio_network_adaptor/*.h audio_network_adaptor/*.cc audio_network_adaptor/*.c
-                 codecs/*.h codecs/*.cc
-                 codecs/*/*.h codecs/*/*.cc codecs/*/*.c
-                 neteq/*.h neteq/*.cc neteq/*.c
-                 )
+
+add_definitions(-DWEBRTC_USE_BUILTIN_ISAC_FLOAT)
+
+file(GLOB_RECURSE rtc_audiocoding_srcs *.h *.c *.cc)
 
 list(FILTER  rtc_audiocoding_srcs EXCLUDE REGEX ".*test.*")
 list(FILTER  rtc_audiocoding_srcs EXCLUDE REGEX ".*fake.*")
-list(FILTER  rtc_audiocoding_srcs EXCLUDE REGEX ".*opus.*")
+list(FILTER  rtc_audiocoding_srcs EXCLUDE REGEX ".*mips.*")
+list(FILTER  rtc_audiocoding_srcs EXCLUDE REGEX ".*neon.*")
 
 source_group(source FILES ${rtc_audiocoding_srcs})
 
 add_library(rtc_audiocoding OBJECT ${rtc_audiocoding_srcs})
+include_directories(${CMAKE_BINARY_DIR}/src/third_party/webrtc/logging/)
 
 target_include_directories(rtc_audiocoding PUBLIC ../../)
 target_include_directories(rtc_audiocoding PUBLIC ../../../abseil-cpp/)
 target_include_directories(rtc_audiocoding PUBLIC ../../../opus/)
+target_include_directories(rtc_audiocoding PUBLIC ../../../opus/src/include)
 
 if(WIN32)
 	add_definitions(-DWEBRTC_WIN)

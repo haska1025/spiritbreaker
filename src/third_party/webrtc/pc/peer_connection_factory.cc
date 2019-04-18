@@ -159,13 +159,18 @@ PeerConnectionFactory::PeerConnectionFactory(
   }
 
   if (!signaling_thread_) {
-    signaling_thread_ = rtc::Thread::Current();
-    if (!signaling_thread_) {
+    owned_signaling_thread_ = rtc::Thread::Create();
+    owned_signaling_thread_->SetName("pc_signaling_thread", nullptr);
+    owned_signaling_thread_->Start();
+    signaling_thread_ = owned_signaling_thread_.get();
+//    signaling_thread_ = rtc::Thread::Current();
+    //signaling_thread_ = std::move(rtc::Thread::Create());
+    //if (!signaling_thread_) {
       // If this thread isn't already wrapped by an rtc::Thread, create a
       // wrapper and own it in this class.
-      signaling_thread_ = rtc::ThreadManager::Instance()->WrapCurrentThread();
-      wraps_current_thread_ = true;
-    }
+     // signaling_thread_ = rtc::ThreadManager::Instance()->WrapCurrentThread();
+     // wraps_current_thread_ = true;
+   // }
   }
 
   // TODO(deadbeef): Currently there is no way to create an external adm in

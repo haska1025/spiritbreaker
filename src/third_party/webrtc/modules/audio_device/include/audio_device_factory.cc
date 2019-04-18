@@ -28,6 +28,7 @@ CreateWindowsCoreAudioAudioDeviceModule() {
   return CreateWindowsCoreAudioAudioDeviceModuleForTest();
 }
 
+#if defined(WEBRTC_WIN)
 rtc::scoped_refptr<AudioDeviceModuleForTest>
 CreateWindowsCoreAudioAudioDeviceModuleForTest() {
   RTC_DLOG(INFO) << __FUNCTION__;
@@ -42,5 +43,5 @@ CreateWindowsCoreAudioAudioDeviceModuleForTest() {
       absl::make_unique<webrtc_win::CoreAudioInput>(),
       absl::make_unique<webrtc_win::CoreAudioOutput>());
 }
-
+#endif
 }  // namespace webrtc

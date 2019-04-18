@@ -1,11 +1,10 @@
 message("Build rtc_call static library")
 
-file(GLOB rtc_call_srcs 
-        rtp_demuxer.cc
-        call_config.cc
-	)
+file(GLOB_RECURSE rtc_call_srcs *.h *.c *.cc)
 
 source_group(source FILES ${rtc_call_srcs})
+
+list(FILTER  rtc_call_srcs EXCLUDE REGEX ".*test.*")
 
 add_library(rtc_call OBJECT ${rtc_call_srcs})
 

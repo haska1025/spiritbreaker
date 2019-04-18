@@ -2,39 +2,7 @@ message("Build spiritbreaker...")
 
 cmake_minimum_required(VERSION 2.8.11)
 
-file(GLOB sbs_srcs
-        command_handler.cpp
-        command_handler.h
-        configuration.cpp
-        configuration.h
-        httpbase.cc
-        httpbase.h
-        httpcommon.cc
-        httpcommon.h
-        httpserver.cc
-        httpserver.h
-        memory_stream.cpp
-        memory_stream.h
-        peer.cpp
-        peer.h
-        publisher.cpp
-        publisher.h
-        room.cpp
-        room.h
-        room_mgr.cpp
-        room_mgr.h
-        sbs_decl.h
-        sbs_error.h
-        sbs_log.cpp
-        sbs_log.h
-        sbs_message.h
-        sbs_mgr.cpp
-        sbs_mgr.h
-        subscriber.cpp
-        subscriber.h
-        webrtcconnection.cpp
-        webrtcconnection.h
-)
+file(GLOB sbs_srcs *.h *.cpp *.cc)
 
 source_group(source FILES ${sbs_srcs})
 
@@ -53,10 +21,11 @@ link_directories(../third_party/abseil-cpp/build/absl/types/)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
+pkg_check_modules(PROTOBUF protobuf)
 
 add_library(sbs ${sbs_srcs})
 
-add_executable(spiritbreaker sbs_main.cpp ${sbs_srcs})
+add_executable(spiritbreaker sbs_main.cpp) 
 
 target_include_directories(sbs PUBLIC ../third_party/webrtc/)
 target_include_directories(sbs PUBLIC ../third_party/abseil-cpp/)
@@ -66,8 +35,11 @@ target_link_libraries(spiritbreaker sbs
         yuv jpeg
         vpx rnnoise
         srtp2 ssl crypto 
-        absl_bad_optional_access absl_strings absl_base absl_throw_delegate
-        ${JSONCPP_LIBRARIES})
+        absl_bad_optional_access absl_strings absl_base absl_throw_delegate absl_bad_variant_access
+        ${JSONCPP_LIBRARIES}
+        ${PROTOBUF_LIBRARIES}
+        -ldl
+        )
 
 find_package(Threads REQUIRED)
 if(THREADS_HAVE_PTHREAD_ARG)
@@ -87,6 +59,5 @@ if(WIN32)
 else(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated")
 	add_definitions(-DWEBRTC_POSIX)
-	add_definitions(-DWEBRTC_LINUX)
 endif(WIN32)
 

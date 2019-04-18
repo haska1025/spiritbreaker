@@ -141,6 +141,7 @@ class PeerConnectionFactory : public PeerConnectionFactoryInterface {
   rtc::Thread* signaling_thread_;
   std::unique_ptr<rtc::Thread> owned_network_thread_;
   std::unique_ptr<rtc::Thread> owned_worker_thread_;
+  std::unique_ptr<rtc::Thread> owned_signaling_thread_;
   Options options_;
   std::unique_ptr<cricket::ChannelManager> channel_manager_;
   std::unique_ptr<rtc::BasicNetworkManager> default_network_manager_;

@@ -1,10 +1,16 @@
 message("Build rtc_media static library")
 
-file(GLOB rtc_media_srcs base/*.cc base/*.c base/*.h engine/*.h engine/*.cc engine/*.c)
+add_definitions(-DHAVE_WEBRTC_VIDEO)
+add_definitions(-DHAVE_WEBRTC_VOICE)
+add_definitions(-DWEBRTC_INCLUDE_INTERNAL_AUDIO_DEVICE)
+
+file(GLOB_RECURSE rtc_media_srcs *.h *.cc *.c)
+
 list(FILTER  rtc_media_srcs EXCLUDE REGEX ".*test.*")
 list(FILTER  rtc_media_srcs EXCLUDE REGEX ".*fake.*")
+list(FILTER  rtc_media_srcs EXCLUDE REGEX ".*sctp.*")
 
-source_group(source FILES ${rtc_media_srcs})
+source_group(media FILES ${rtc_media_srcs})
 
 add_library(rtc_media OBJECT ${rtc_media_srcs})
 

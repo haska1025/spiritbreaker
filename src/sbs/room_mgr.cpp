@@ -61,7 +61,8 @@ int RoomMgr::Initialize()
 
     peer_connection_factory_ = webrtc::CreatePeerConnectionFactory(
             nullptr /* network_thread */, nullptr /* worker_thread */,
-            nullptr /* signaling_thread */, nullptr /* default_adm */,
+            nullptr /* signaling_thread */, 
+            nullptr /* default_adm */,
             webrtc::CreateBuiltinAudioEncoderFactory(),
             webrtc::CreateBuiltinAudioDecoderFactory(),
             webrtc::CreateBuiltinVideoEncoderFactory(),

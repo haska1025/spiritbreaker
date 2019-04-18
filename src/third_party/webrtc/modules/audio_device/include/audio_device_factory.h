@@ -35,10 +35,10 @@ namespace webrtc {
 //    std::unique_ptr<webrtc_win::ScopedCOMInitializer> com_initializer_;
 //
 rtc::scoped_refptr<AudioDeviceModule> CreateWindowsCoreAudioAudioDeviceModule();
-
+#if defined(WEBRTC_WIN)
 rtc::scoped_refptr<AudioDeviceModuleForTest>
 CreateWindowsCoreAudioAudioDeviceModuleForTest();
-
+#endif
 }  // namespace webrtc
 
 #endif  //  MODULES_AUDIO_DEVICE_INCLUDE_AUDIO_DEVICE_FACTORY_H_

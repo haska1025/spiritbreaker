@@ -5,18 +5,40 @@
 #include <pc/webrtc_sdp.h>
 #include <api/jsep_session_description.h>
 
+WebRtcConnection::DummyCreateSessionDescriptionObserver* WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(rtc::scoped_refptr<WebRtcConnection> conn, std::shared_ptr<std::promise<std::string>> p)
+{
+    return new rtc::RefCountedObject<WebRtcConnection::DummyCreateSessionDescriptionObserver>(conn, p);
+}
+void WebRtcConnection::DummyCreateSessionDescriptionObserver::OnSuccess(webrtc::SessionDescriptionInterface* desc) 
+{
+    RTC_LOG(LS_INFO) << __FUNCTION__ << "Success";
 
-class DummySetSessionDescriptionObserver : public webrtc::SetSessionDescriptionObserver {
-public:
-    static DummySetSessionDescriptionObserver* Create() {
-        return new rtc::RefCountedObject<DummySetSessionDescriptionObserver>();
-    }
-    virtual void OnSuccess() { RTC_LOG(INFO) << __FUNCTION__; }
-    virtual void OnFailure(webrtc::RTCError error) {
-        RTC_LOG(INFO) << __FUNCTION__ << " " << ToString(error.type()) << ": "
-            << error.message();
-    }
-};
+    std::string sdp;
+    desc->ToString(&sdp);
+    conn_->SetLocalSdp(sdp);
+    result_promise_->set_value(sdp);
+}
+void WebRtcConnection::DummyCreateSessionDescriptionObserver::OnFailure(webrtc::RTCError error)
+{
+    RTC_LOG(LS_INFO) << __FUNCTION__ << "Failed";
+}
+
+WebRtcConnection::DummySetSessionDescriptionObserver* WebRtcConnection::DummySetSessionDescriptionObserver::Create(rtc::scoped_refptr<WebRtcConnection> conn, std::shared_ptr<std::promise<std::string>> p)
+{
+    return new rtc::RefCountedObject<WebRtcConnection::DummySetSessionDescriptionObserver>(conn, p);
+}
+void WebRtcConnection::DummySetSessionDescriptionObserver::OnSuccess()
+{
+    RTC_LOG(LS_INFO) << __FUNCTION__ << "Success";
+
+    conn_->peer_conn()->CreateAnswer(WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(conn_, result_promise_), webrtc::PeerConnectionInterface::RTCOfferAnswerOptions());
+}
+void WebRtcConnection::DummySetSessionDescriptionObserver::OnFailure(webrtc::RTCError error)
+{
+    RTC_LOG(LS_INFO) << __FUNCTION__ << "Failed";
+}
+
+
 
 WebRtcConnection::WebRtcConnection()
 {
@@ -27,12 +49,6 @@ WebRtcConnection::~WebRtcConnection()
 
 int WebRtcConnection::Initialize()
 {
-
-    // Create the jsep transport controller
-    //    webrtc::JsepTransportController::Config config;
-    //   transport_controller_.reset(new webrtc::JsepTransportController(
-    //              NULL,NULL, NULL, NULL, config));
-
     webrtc::PeerConnectionInterface::RTCConfiguration config;
     config.sdp_semantics = webrtc::SdpSemantics::kUnifiedPlan;
     config.enable_dtls_srtp = true;
@@ -64,44 +80,28 @@ int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
         return SBS_GENERAL_ERROR;
     }
 
-    remote_desc_ = std::move(desc);
-
-    peer_connection_->SetRemoteDescription(
-            DummySetSessionDescriptionObserver::Create(),
-            remote_desc_.release());
-
     std::string tmpsdp;
-    remote_desc_->ToString(&tmpsdp);
+    desc->ToString(&tmpsdp);
 
     RTC_LOG(LS_INFO) << "After deserialize===" << tmpsdp;
+
+    std::shared_ptr<std::promise<std::string>> answer_promise = std::make_shared<std::promise<std::string>>();
+
+    std::future<std::string> answer_future = answer_promise->get_future();
+
+    peer_connection_->SetRemoteDescription(
+            WebRtcConnection::DummySetSessionDescriptionObserver::Create(this, answer_promise),
+            desc.release());
+
+    answer_future.get();
     return SBS_SUCCESS;
 }
 
-int WebRtcConnection::CreateAnswer()
+int WebRtcConnection::SetLocalSdp(const std::string &sdp)
 {
- //   cricket::MediaSessionOptions options;
-    if (!remote_desc_){
-        RTC_LOG(LS_ERROR) << "Create answer failed. You must call SetRemoteSdp firstly";
-        return SBS_GENERAL_ERROR;
-    }
-
-    peer_connection_->CreateAnswer(nullptr, webrtc::PeerConnectionInterface::RTCOfferAnswerOptions());
-/*
-    auto desc = RoomMgr::Instance()->media_session_desc_factory()->CreateAnswer(
-            remote_desc_->description(),
-            options,
-            local_desc_?local_desc_->description():nullptr);
-    if (!desc){
-        RTC_LOG(LS_ERROR) << "Create answer failed";
-        return SBS_GENERAL_ERROR;
-    }
-
-    local_desc_ = std::move(answer);
-
-    local_desc_->ToString(&local_sdp_);
-
-    RTC_LOG(LS_INFO) << "The local sdp :" << local_sdp_;
-*/
-    return SBS_SUCCESS;
+    RTC_LOG(LS_INFO) << "The local sdp=" << sdp;
+    local_sdp_ = sdp;
+    return 0;
 }
+
 

@@ -9,6 +9,8 @@
 #include <string.h>
 #include <fstream>
 #include <iostream>
+#include <thread>
+#include <chrono>
 #include "../../src/sbs/webrtcconnection.h"
 #include "../../src/sbs/sbs_log.h"
 #include "../../src/sbs/sbs_mgr.h"
@@ -40,7 +42,13 @@ public:
 
         CPPUNIT_ASSERT(0==conn->Initialize());
         CPPUNIT_ASSERT(0==conn->SetRemoteSdp(offer));
-        CPPUNIT_ASSERT(0==conn->CreateAnswer());
+        std::string sdp = conn->GetLocalSdp();
+        CPPUNIT_ASSERT(!sdp.empty());
+
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+        
+        rtc::Thread *pthrMain = rtc::Thread::Current();
+        pthrMain->Run();
     }
 };
 

@@ -12,13 +12,24 @@ add_subdirectory(call)
 add_subdirectory(stats)
 add_subdirectory(logging)
 add_subdirectory(media)
+add_subdirectory(audio)
+add_subdirectory(video)
 add_subdirectory(common_audio)
 add_subdirectory(common_video)
+add_subdirectory(modules)
 add_subdirectory(modules/rtp_rtcp)
 add_subdirectory(modules/audio_processing)
 add_subdirectory(modules/third_party)
 add_subdirectory(modules/audio_coding)
 add_subdirectory(modules/video_coding)
+add_subdirectory(modules/congestion_controller)
+add_subdirectory(modules/bitrate_controller)
+add_subdirectory(modules/pacing)
+add_subdirectory(modules/remote_bitrate_estimator)
+add_subdirectory(modules/utility)
+add_subdirectory(modules/audio_mixer)
+add_subdirectory(modules/audio_device)
+
 #add_subdirectory(examples)
 
 add_library(webrtc STATIC 
@@ -28,6 +39,8 @@ add_library(webrtc STATIC
 	$<TARGET_OBJECTS:rtc_pc> 
 	$<TARGET_OBJECTS:rtc_p2p> 
 	$<TARGET_OBJECTS:rtc_logging> 
+	$<TARGET_OBJECTS:rtc_audio> 
+	$<TARGET_OBJECTS:rtc_video> 
 	$<TARGET_OBJECTS:rtc_audiothird> 
 	$<TARGET_OBJECTS:rtc_audiocoding> 
 	$<TARGET_OBJECTS:rtc_audioprocessing> 
@@ -36,8 +49,16 @@ add_library(webrtc STATIC
 	$<TARGET_OBJECTS:rtc_stats> 
 	$<TARGET_OBJECTS:rtc_call> 
 	$<TARGET_OBJECTS:rtc_rtprtcp> 
+	$<TARGET_OBJECTS:rtc_pacing> 
 	$<TARGET_OBJECTS:rtc_commonaudio> 
 	$<TARGET_OBJECTS:rtc_commonvideo> 
+	$<TARGET_OBJECTS:rtc_congestioncontroller> 
+	$<TARGET_OBJECTS:rtc_bitratecontroller> 
+	$<TARGET_OBJECTS:rtc_remotebitrateestimator> 
+	$<TARGET_OBJECTS:rtc_utility> 
+	$<TARGET_OBJECTS:rtc_modulescommon> 
+	$<TARGET_OBJECTS:rtc_audiomixer> 
+	$<TARGET_OBJECTS:rtc_audiodevice> 
     )
 #target_link_libraries(webrtc rtc_api)
 #add_custom_command(OUTPUT lib${PROJECT_NAME}.a

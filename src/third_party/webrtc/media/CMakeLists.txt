@@ -8,15 +8,16 @@ file(GLOB_RECURSE rtc_media_srcs *.h *.cc *.c)
 
 list(FILTER  rtc_media_srcs EXCLUDE REGEX ".*test.*")
 list(FILTER  rtc_media_srcs EXCLUDE REGEX ".*fake.*")
-list(FILTER  rtc_media_srcs EXCLUDE REGEX ".*sctp.*")
+#list(FILTER  rtc_media_srcs EXCLUDE REGEX ".*sctp.*")
 
 source_group(media FILES ${rtc_media_srcs})
 
 add_library(rtc_media OBJECT ${rtc_media_srcs})
 
 target_include_directories(rtc_media PUBLIC ../)
-target_include_directories(rtc_media PUBLIC ../../abseil-cpp/)
 target_include_directories(rtc_media PUBLIC ../../)
+target_include_directories(rtc_media PUBLIC ../../abseil-cpp/)
+target_include_directories(rtc_media PUBLIC ../../usrsctp)
 target_include_directories(rtc_media PUBLIC ../../libyuv/include/)
 
 if(WIN32)

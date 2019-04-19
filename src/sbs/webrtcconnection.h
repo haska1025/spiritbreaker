@@ -30,25 +30,29 @@ public:
     // PeerConnectionObserver implementation.
     //
     
-    void OnSignalingChange( webrtc::PeerConnectionInterface::SignalingState new_state) override{};
-    void OnAddTrack( rtc::scoped_refptr<webrtc::RtpReceiverInterface> receiver, const std::vector<rtc::scoped_refptr<webrtc::MediaStreamInterface>>& streams) override{};
-    void OnRemoveTrack(rtc::scoped_refptr<webrtc::RtpReceiverInterface> receiver) override{};
-    void OnDataChannel( rtc::scoped_refptr<webrtc::DataChannelInterface> channel) override {}
-    void OnRenegotiationNeeded() override {}
-    void OnIceConnectionChange( webrtc::PeerConnectionInterface::IceConnectionState new_state) override{};
-    void OnIceGatheringChange( webrtc::PeerConnectionInterface::IceGatheringState new_state) override{};
-    void OnIceCandidate(const webrtc::IceCandidateInterface* candidate) override{};
-    void OnIceConnectionReceivingChange(bool receiving) override {}
+    void OnSignalingChange( webrtc::PeerConnectionInterface::SignalingState new_state) override;
+    void OnAddTrack( rtc::scoped_refptr<webrtc::RtpReceiverInterface> receiver,
+            const std::vector<rtc::scoped_refptr<webrtc::MediaStreamInterface>>& streams) override;
+    void OnRemoveTrack(rtc::scoped_refptr<webrtc::RtpReceiverInterface> receiver) override;
+    void OnDataChannel( rtc::scoped_refptr<webrtc::DataChannelInterface> channel) override; 
+    void OnRenegotiationNeeded() override;
+    void OnIceConnectionChange( webrtc::PeerConnectionInterface::IceConnectionState new_state) override;
+    void OnIceGatheringChange( webrtc::PeerConnectionInterface::IceGatheringState new_state) override;
+    void OnIceCandidate(const webrtc::IceCandidateInterface* candidate) override;
+    void OnIceConnectionReceivingChange(bool receiving) override; 
 
     rtc::scoped_refptr<webrtc::PeerConnectionInterface> peer_conn(){return peer_connection_;}
 
     // CreateSessionDescriptionObserver implementation.
-    class DummyCreateSessionDescriptionObserver : public webrtc::CreateSessionDescriptionObserver
+    class DummyCreateSessionDescriptionObserver
+        : public webrtc::CreateSessionDescriptionObserver
     {
     public:
-        static DummyCreateSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn, std::shared_ptr<std::promise<std::string>> p);
+        static DummyCreateSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn,
+                std::shared_ptr<std::promise<std::string>> p);
 
-        DummyCreateSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn, std::shared_ptr<std::promise<std::string>> p):conn_(conn),result_promise_{p}{}
+        DummyCreateSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn,
+                std::shared_ptr<std::promise<std::string>> p):conn_(conn),result_promise_{p}{}
 
         void OnSuccess(webrtc::SessionDescriptionInterface* desc) override;
         void OnFailure(webrtc::RTCError error) override;
@@ -57,12 +61,15 @@ public:
         std::shared_ptr<std::promise<std::string>> result_promise_;
     };
 
-    class DummySetSessionDescriptionObserver : public webrtc::SetSessionDescriptionObserver 
+    class DummySetSessionDescriptionObserver
+        : public webrtc::SetSessionDescriptionObserver 
     {
     public:
-        static DummySetSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn, std::shared_ptr<std::promise<std::string>> p); 
+        static DummySetSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn,
+                std::shared_ptr<std::promise<std::string>> p); 
 
-        DummySetSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn, std::shared_ptr<std::promise<std::string>> p):conn_(conn),result_promise_{p}{}
+        DummySetSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn, 
+                std::shared_ptr<std::promise<std::string>> p):conn_(conn),result_promise_{p}{}
 
         virtual void OnSuccess() override;
         virtual void OnFailure(webrtc::RTCError error) override; 

@@ -2,7 +2,7 @@
 
 此项目是从webrtc源码中移植了rtc_base, api ,p2p相关模块。目的是用于后续支持ice协议的流媒体服务器开发。
 
-依赖的第三方库：boringssl, abseil-cpp, jsoncpp, libsrtp
+依赖的第三方库：boringssl, abseil-cpp, jsoncpp, libsrtp，ffmpeg,libjpeg,libyuv，opus，openh264，libvpx，rnnoise
 
 ## build
 
@@ -52,5 +52,44 @@ github 路径：https://github.com/cisco/libsrtp
  
  需要注意的是：webrtc用的时候，需要用到AES-GCM模式，因此需要加上宏GCM
  
+ ### ffmpeg
+ 
+ 可能用到一些音频，视频的 编解码库？
+ 
+ github路径：https://github.com/FFmpeg/FFmpeg.git
+ 
+ ### libjpeg
+ 
+ 视频图像编解码依赖的库
+ 
+ github路径：
 
+ ### libyuv
+ 
+ 视频图像编解码依赖的库
+ 
+ github路径：
 
+ ### opus
+ 
+现代音频编解码库
+ 
+ github路径：https://git.xiph.org/opus.git
+
+ ### openh264
+ 
+ 视频图像编解码依赖的库
+ 
+ github路径： https://github.com/cisco/openh264.git
+
+ ### libvpx
+ 
+ 视频图像编解码依赖的库，主要是google vp8/vp9
+ 
+ github路径： https://github.com/webmproject/libvpx.git
+ 
+ ### rnnoise
+ 
+ 基于神经网络算法的噪音处理？
+ 
+ 这个还是用webrtc自带的吧，github实现貌似是c实现，webrtc自带是c++实现。

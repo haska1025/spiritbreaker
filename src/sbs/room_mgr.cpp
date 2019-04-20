@@ -3,6 +3,8 @@
 #include "sbs_error.h"
 #include "httpcommon.h"
 #include "peer.h"
+#include "publisher.h"
+#include "subscriber.h"
 #include "configuration.h"
 
 #include <rtc_base/logging.h>
@@ -32,41 +34,16 @@ int RoomMgr::Initialize()
 {
     int rc = SBS_SUCCESS;
 
-    //Create audio codecs
-    cricket::AudioCodecs audio_codecs;
-    rc = Configuration::GetCodecs("audio", audio_codecs);
-    if (rc != SBS_SUCCESS)
-        return rc;
-
-    std::for_each(audio_codecs.begin(), audio_codecs.end(), [](const cricket::AudioCodec &codec){
-            RTC_LOG(LS_INFO) << "audio===" << codec.ToString();
-            });
-
-    //media_session_factory_.set_audio_codecs(audio_codecs, audio_codecs);
-    //Create video codecs
-    cricket::VideoCodecs video_codecs;
-    rc = Configuration::GetCodecs("video", video_codecs);
-    if (rc != SBS_SUCCESS)
-        return rc;
-
-    std::for_each(video_codecs.begin(), video_codecs.end(), [](const cricket::VideoCodec &codec){
-            RTC_LOG(LS_INFO) << "video===" << codec.ToString();
-            });
-
-    //media_session_factory_.set_video_codecs(video_codecs);
-
-
-    //webrtc::PeerConnectionFactoryDependencies dependencies;
-    //peer_connection_factory_ = webrtc::CreateModularPeerConnectionFactory(std::move(dependencies));
-
     peer_connection_factory_ = webrtc::CreatePeerConnectionFactory(
-            nullptr /* network_thread */, nullptr /* worker_thread */,
+            nullptr /* network_thread */,
+            nullptr /* worker_thread */,
             nullptr /* signaling_thread */, 
             nullptr /* default_adm */,
             webrtc::CreateBuiltinAudioEncoderFactory(),
             webrtc::CreateBuiltinAudioDecoderFactory(),
             webrtc::CreateBuiltinVideoEncoderFactory(),
-            webrtc::CreateBuiltinVideoDecoderFactory(), nullptr /* audio_mixer */,
+            webrtc::CreateBuiltinVideoDecoderFactory(),
+            nullptr /* audio_mixer */,
             nullptr /* audio_processing */);
 
     if (!peer_connection_factory_) {
@@ -100,6 +77,28 @@ int RoomMgr::PeerLeaveRoom(const Message &request, Message &response)
 
 int RoomMgr::AddPublisher(const Message &request, Message &response)
 {
+    uint32_t publisherid = 0;
+
+    auto room = GetRoom(request.room_id());
+    if (!room){
+        RTC_LOG(LS_ERROR) << "Add publisher. the room isn't exist. roomid=" << request.room_id();
+        return SBS_ERROR_ROOM_NOT_EXIST;
+    }
+    auto peer = room->GetPeer(request.peer_id());
+    if (!peer){
+        RTC_LOG(LS_ERROR) << "Add publisher. the peer isn't exist. roomid=" << request.peer_id();
+        return SBS_ERROR_PEER_NOT_EXIST;
+    }
+
+    auto publisher = peer->GetPublisher(publisherid); 
+    if (publisher){
+        RTC_LOG(LS_ERROR) << "Add publisher. the peer already exist. roomid=" << request.peer_id();
+        return SBS_SUCCESS;
+    }
+
+    publisher = std::make_shared<Publisher>(publisherid);
+    peer->AddPublisher(publisher);
+
     return SBS_SUCCESS;
 }
 int RoomMgr::ReomvePublisher(const Message &request, Message &response)

@@ -51,29 +51,29 @@ bool Peer::AddSubsciber(std::shared_ptr<Subscriber> sub)
 {
     std::lock_guard<std::mutex> lg(subscribers_mutex_);
 
-    if (subscribers_.find(sub->peer_id()) == subscribers_.end()){
-        subscribers_[sub->peer_id()] = sub;
+    if (subscribers_.find(sub->pub_id()) == subscribers_.end()){
+        subscribers_[sub->pub_id()] = sub;
         return true;
     }
 
     return false;
 }
-bool Peer::RemoveSubsciber(uint32_t peerid)
+bool Peer::RemoveSubsciber(uint32_t pubid)
 {
     std::lock_guard<std::mutex> lg(subscribers_mutex_);
 
-    auto it = subscribers_.find(peerid);
+    auto it = subscribers_.find(pubid);
     if (it != subscribers_.end()){
         subscribers_.erase(it);
         return true;
     }
     return false;
 }
-std::shared_ptr<Subscriber> Peer::GetSubsciber(uint32_t peerid)
+std::shared_ptr<Subscriber> Peer::GetSubsciber(uint32_t pubid)
 {
     std::lock_guard<std::mutex> lg(subscribers_mutex_);
 
-    auto it = subscribers_.find(peerid);
+    auto it = subscribers_.find(pubid);
     if (it != subscribers_.end()){
         return it->second;
     }

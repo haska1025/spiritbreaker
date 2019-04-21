@@ -7,6 +7,7 @@
 SBS_NAMESPACE_DECL_BEGIN
 class Peer;
 class Publisher;
+class WebRtcConnection;
 class Subscriber
 {
 public:
@@ -18,6 +19,9 @@ public:
 private:
     std::shared_ptr<Peer> peer_;
     std::shared_ptr<Publisher> publisher_;
+
+    // Just send data
+    std::shared_ptr<WebRtcConnection> webrtc_conn_;
 };
 SBS_NAMESPACE_DECL_END
 #endif//_SUBSCRIBER_H_

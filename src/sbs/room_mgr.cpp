@@ -47,7 +47,8 @@ int RoomMgr::Initialize()
             nullptr /* audio_processing */);
 
     if (!peer_connection_factory_) {
-        return false;
+        RTC_LOG(LS_ERROR) << "Create peer connection factory failed!";
+        return SBS_GENERAL_ERROR;
     }
 
     return rc;
@@ -96,9 +97,16 @@ int RoomMgr::AddPublisher(const Message &request, Message &response)
         return SBS_SUCCESS;
     }
 
-    publisher = std::make_shared<Publisher>(publisherid);
+    publisher = std::make_shared<Publisher>(publisherid, peer);
+    if (!publisher){
+        RTC_LOG(LS_ERROR) << "Add publisher to create publisher failed. roomid=" << request.peer_id() << " pubid=" << publisherid;
+        return SBS_GENERAL_ERROR;
+    }
+
     peer->AddPublisher(publisher);
 
+    // Set remote sdp
+    // Get local sdp
     return SBS_SUCCESS;
 }
 int RoomMgr::ReomvePublisher(const Message &request, Message &response)

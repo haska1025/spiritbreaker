@@ -8,8 +8,12 @@
 #include <rtc_base/strings/json.h>
 
 BEGIN_CMD_PROCESSOR_IMPL()
-    REG_PROCESSOR(HV_POST, "/room/join/" , CMD_PeerJoinRoom)
-    REG_PROCESSOR(HV_POST, "/room/leave/" , CMD_PeerLeaveRoom)
+    REG_PROCESSOR(HV_POST, "/room/peer/join/" , CMD_PeerJoinRoom)
+    REG_PROCESSOR(HV_POST, "/room/peer/leave/" , CMD_PeerLeaveRoom)
+    REG_PROCESSOR(HV_POST, "/room/peer/publish" , CMD_PeerAddPublisher)
+    REG_PROCESSOR(HV_POST, "/room/peer/unpublish" , CMD_PeerAddPublisher)
+    REG_PROCESSOR(HV_POST, "/room/peer/subscribe" , CMD_PeerAddSubscriber)
+    REG_PROCESSOR(HV_POST, "/room/peer/unsubscribe" , CMD_PeerAddSubscriber)
 END_CMD_PROCESSOR_IMPL()
 
 int CommandHandler::HandleRequest(HttpRequestData &request, HttpResponseData &response)

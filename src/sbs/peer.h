@@ -21,8 +21,8 @@ public:
     std::shared_ptr<Publisher> GetPublisher(uint32_t id);
 
     bool AddSubsciber(std::shared_ptr<Subscriber> sub);
-    bool RemoveSubsciber(uint32_t peerid);
-    std::shared_ptr<Subscriber> GetSubsciber(uint32_t peerid);
+    bool RemoveSubsciber(uint32_t pubid);
+    std::shared_ptr<Subscriber> GetSubsciber(uint32_t pubid);
 
     uint32_t id(){return id_;}
     std::shared_ptr<Room> room(){return room_;}

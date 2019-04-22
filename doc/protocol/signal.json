@@ -1,0 +1,67 @@
+//The protocol between the htalk with spiritbreaker.
+
+//The format
+{
+    cmd:"cmdid",
+    roomid:"roomid",
+    peerid:"peerid",
+    msg:"The message content",
+    error:"The SUCCESS or the error message information"
+}
+
+//Join the room
+{
+    cmd:"join",
+    roomid:"roomid",
+    peerid:"peerid",
+    msg:"The message content",
+    error:"The SUCCESS or the error message information"
+}
+
+//Leave the room
+{
+    cmd:"leave",
+    roomid:"roomid",
+    peerid:"peerid",
+    msg:"The message content",
+    error:"The SUCCESS or the error message information"
+}
+
+//Publish the mediastream 
+{
+    cmd:"publish",
+    roomid:"roomid",
+    peerid:"peerid",
+
+    msg:"The message content",
+    error:"The SUCCESS or the error message information"
+}
+
+//Subscribe the mediastream 
+{
+    cmd:"subscribe",
+    roomid:"roomid",
+    peerid:"peerid",
+
+    msg:"The message content",
+    error:"The SUCCESS or the error message information"
+}
+
+//Offer the sdp
+{
+    cmd:"offer",
+    roomid:"roomid",
+    peerid:"peerid",
+    msg:"The message content",
+    error:"The SUCCESS or the error message information"
+}
+
+//Answer the sdp
+{
+    cmd:"answer",
+    roomid:"roomid",
+    peerid:"peerid",
+    msg:"The message content",
+    error:"The SUCCESS or the error message information"
+}
+

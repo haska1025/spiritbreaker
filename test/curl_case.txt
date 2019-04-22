@@ -1,0 +1,2 @@
+1. join case
+curl -H "Content-Type: application/json" -X POST  --data '{"cmd":"join", "roomid":"23","peerid":"33", "msg":"hello"}' http://127.0.0.1:9999/room/join

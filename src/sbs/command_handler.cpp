@@ -11,9 +11,9 @@ BEGIN_CMD_PROCESSOR_IMPL()
     REG_PROCESSOR(HV_POST, "/room/peer/join/" , CMD_PeerJoinRoom)
     REG_PROCESSOR(HV_POST, "/room/peer/leave/" , CMD_PeerLeaveRoom)
     REG_PROCESSOR(HV_POST, "/room/peer/publish" , CMD_PeerAddPublisher)
-    REG_PROCESSOR(HV_POST, "/room/peer/unpublish" , CMD_PeerAddPublisher)
+    REG_PROCESSOR(HV_POST, "/room/peer/unpublish" , CMD_PeerRemovePublisher)
     REG_PROCESSOR(HV_POST, "/room/peer/subscribe" , CMD_PeerAddSubscriber)
-    REG_PROCESSOR(HV_POST, "/room/peer/unsubscribe" , CMD_PeerAddSubscriber)
+    REG_PROCESSOR(HV_POST, "/room/peer/unsubscribe" , CMD_PeerRemoveSubscriber)
 END_CMD_PROCESSOR_IMPL()
 
 int CommandHandler::HandleRequest(HttpRequestData &request, HttpResponseData &response)
@@ -80,6 +80,22 @@ int CommandHandler::CMD_PeerLeaveRoom(const Message &req, Message &rsp)
     return 0;
 }
 
+int CommandHandler::CMD_PeerAddPublisher(const Message &req, Message &rsp)
+{
+    return 0;
+}
+int CommandHandler::CMD_PeerRemovePublisher(const Message &req, Message &rsp)
+{
+    return 0;
+}
+int CommandHandler::CMD_PeerAddSubscriber(const Message &req, Message &rsp)
+{
+    return 0;
+}
+int CommandHandler::CMD_PeerRemoveSubscriber(const Message &req, Message &rsp)
+{
+    return 0;
+}
 int CommandHandler::__GetBody(rtc::StreamInterface *document, std::string &body)
 {
     char buffer[1024];

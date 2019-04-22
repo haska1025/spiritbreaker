@@ -154,14 +154,20 @@ cmake ..
  
  ### spiritbreaker build
  
- 首先clone code到本地
+spiritbreaker会一同编译webrtc，webrtc在编译audio device module的时候，需要依赖到系统声卡驱动相关api，所以做如下安装：
  
- 然后执行如下命令：
- ```c
+sudo apt-get install libasound2-dev
+  
+sudo apt-get install libpulse-dev 
+ 
+首先clone code到本地
+ 
+然后执行如下命令：
+```c
  cd spiritbreaker
  mkdir build
  cd build
  cmake ..
  make
- ```
+```
  

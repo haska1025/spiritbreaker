@@ -1,0 +1,27 @@
+{
+  "name": "spiritbreaker",
+  "version": "1.0.0",
+  "description": "The media server base webrtc for SFU",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haska1025/spiritbreaker.git"
+  },
+  "keywords": [
+    "webrtc",
+    "SFU"
+  ],
+  "author": "haska1025",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haska1025/spiritbreaker/issues"
+  },
+  "homepage": "https://github.com/haska1025/spiritbreaker#readme",
+  "dependencies": {
+    "express": "^4.17.0",
+    "socket.io": "^2.2.0"
+  }
+}

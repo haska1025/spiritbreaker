@@ -1,0 +1,14 @@
+{
+    "appenders": {
+        "Spiritbreaker": {
+            "type": "console",
+            "pattern": "%m"
+        }
+    },
+    "categories":{
+        "default":{
+            "appenders":["Spiritbreaker"],
+            "level":"debug"
+        }
+    }
+}

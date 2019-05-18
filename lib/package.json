@@ -22,6 +22,7 @@
   "homepage": "https://github.com/haska1025/spiritbreaker#readme",
   "dependencies": {
     "express": "^4.17.0",
+    "log4js": "^4.2.0",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {

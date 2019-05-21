@@ -15,4 +15,4 @@ source_group(source FILES ${rnnoise_srcs})
 add_library(rnnoise STATIC ${rnnoise_srcs})
 
 target_include_directories(rnnoise PRIVATE ../../)
-
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated")

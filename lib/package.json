@@ -1,5 +1,5 @@
 {
-  "name": "spiritbreaker",
+  "name": "sbs",
   "version": "1.0.0",
   "description": "The media server base webrtc for SFU",
   "main": "index.js",

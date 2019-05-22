@@ -6,6 +6,8 @@
 
 由于webrtc rtc_event_log 用到了protobuf，所以需要安装protobuf3.0以上版本
 
+项目最终编译生成一个 libsbs.so
+
 ## build
 
 ### 第三方库的依赖build
@@ -22,20 +24,28 @@ boringssl 依赖go，安装参考：https://tecadmin.net/install-go-on-ubuntu/
 
 将boringssl克隆到spiritbreadk/src/thirdparty目录
 
+注意borringssl需要编译生成一个共享库。
+
 ```c
 cd spiritbreadk/src/thirdparty
 git clone https://github.com/google/boringssl.git
 cd boringssl
 mkdir build
 cd build
-cmake ..
+cmake -DCMAKE_CXX_FLAGS="-lrt" -DBUILD_SHARED_LIBS=1 ..
 ```
+CMAKE_CXX_FLAGS="-lrt" 增加一个rt库的依赖，主要是链接clock_gettime函数。
+
 
 #### Abseil安装
 
 将Abseil克隆到spiritbreadk/src/thirdparty目录
 
 参考：https://abseil.io/docs/cpp/quickstart.html#running-the-abseil-hello-world
+
+需要编译共享库，打开顶级 CMakeLists.txt 增加如下内容：
+
+set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 
 ```c
 cd abseil-cpp
@@ -125,6 +135,8 @@ cmake ..
  ./configure
  make
  ```
+ 
+ 注意，貌似用 github 版本，不能使用。目前用webrtc自带的。
  
  #### rnnoise
  

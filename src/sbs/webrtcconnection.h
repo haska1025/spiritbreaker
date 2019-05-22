@@ -1,8 +1,6 @@
 #ifndef _WEBRTCCONNECTION_H_
 #define _WEBRTCCONNECTION_H_
 
-#include "sbs_decl.h"
-
 #include <api/jsep.h>
 #include <api/peer_connection_interface.h>
 
@@ -10,21 +8,31 @@
 #include <string>
 #include <future>
 
+#include "sbs_decl.h"
+#include "webrtc_connection_interface.h"
+
 SBS_NAMESPACE_DECL_BEGIN
 
-class WebRtcConnection: public webrtc::PeerConnectionObserver ,  public rtc::RefCountInterface
+class WebRtcConnection: public webrtc::PeerConnectionObserver,
+    public rtc::RefCountInterface,
+    public WebRtcConnectionInterface 
 {
 public:
     WebRtcConnection();
     ~WebRtcConnection();
 
-    int Initialize();
+    //
+    // WebRtcConnectionInterface implementation.
+    //
 
-    int SetRemoteSdp(const std::string &sdp);
-    int SetLocalSdp(const std::string &sdp);
+    int Initialize() override;
+    int Close() override;
 
-    std::string GetLocalSdp(){return local_sdp_;}
-    std::string GetRemoteSdp(){return remote_sdp_;}
+    int SetRemoteSdp(const std::string &sdp) override;
+    int SetLocalSdp(const std::string &sdp) override;
+
+    std::string GetLocalSdp() override{return local_sdp_;}
+    std::string GetRemoteSdp()override {return remote_sdp_;}
 
     //
     // PeerConnectionObserver implementation.

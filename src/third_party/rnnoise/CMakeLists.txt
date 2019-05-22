@@ -3,6 +3,7 @@ project(rnnoise)
 
 message("Build rnnoise static library")
 
+set (CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 
 add_definitions(-DWEBRTC_USE_BUILTIN_ISAC_FLOAT)
 

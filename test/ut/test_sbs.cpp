@@ -16,6 +16,7 @@
 #include "../../src/sbs/sbs_mgr.h"
 #include "../../src/sbs/room_mgr.h"
 #include "../../src/sbs/configuration.h"
+#include "../../src/sbs/webrtc_connection_interface.h"
 
 using namespace CPPUNIT_NS;
 
@@ -46,6 +47,18 @@ public:
         CPPUNIT_ASSERT(!sdp.empty());
 
         std::this_thread::sleep_for(std::chrono::seconds(10));
+
+        WebRtcConnectionInterface *conninter = WebRtcConnectionInterface::Create();
+
+        CPPUNIT_ASSERT(0==conninter->Initialize());
+        CPPUNIT_ASSERT(0==conninter->SetRemoteSdp(offer));
+        sdp = conninter->GetLocalSdp();
+        CPPUNIT_ASSERT(!sdp.empty());
+
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+
+        WebRtcConnectionInterface::Delete(conninter);
+        conninter = nullptr;
         
         rtc::Thread *pthrMain = rtc::Thread::Current();
         pthrMain->Run();

@@ -120,6 +120,11 @@ int WebRtcConnection::SetLocalSdp(const std::string &sdp)
     return 0;
 }
 
+int WebRtcConnection::Close()
+{
+    return 0;
+}
+
 void WebRtcConnection::OnSignalingChange( webrtc::PeerConnectionInterface::SignalingState new_state)
 {
     RTC_LOG(LS_INFO) << "OnSignalingChange new_state=" << new_state;

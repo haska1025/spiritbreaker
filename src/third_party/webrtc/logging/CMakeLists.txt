@@ -36,7 +36,7 @@ if(WIN32)
 	# Generate map file and assembler output
 	set_target_properties(rtc_logging PROPERTIES COMPILE_FLAGS "/FAcs" LINK_FLAGS "/MAP") 
 else(WIN32)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++11 -Wno-deprecated")
 	add_definitions(-DWEBRTC_POSIX)
 	add_definitions(-DWEBRTC_LINUX)
 endif(WIN32)

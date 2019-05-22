@@ -23,14 +23,12 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(JSONCPP jsoncpp)
 pkg_check_modules(PROTOBUF protobuf)
 
-add_library(sbs ${sbs_srcs})
-
-add_executable(spiritbreaker sbs_main.cpp) 
+add_library(sbs SHARED ${sbs_srcs})
 
 target_include_directories(sbs PUBLIC ../third_party/webrtc/)
 target_include_directories(sbs PUBLIC ../third_party/abseil-cpp/)
 target_include_directories(sbs PUBLIC ${JSONCPP_INCLUDE_DIRS})
-target_link_libraries(spiritbreaker sbs 
+target_link_libraries(sbs 
         webrtc
         yuv jpeg
         vpx rnnoise

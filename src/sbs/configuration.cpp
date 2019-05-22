@@ -18,10 +18,6 @@ int Configuration::Initialize()
     if (rc != SBS_SUCCESS)
         return rc;
 
-    rc = ParseMediaConfig();
-    if (rc != SBS_SUCCESS)
-        return rc;
-
     return rc;
 }
 
@@ -46,7 +42,6 @@ int Configuration::ParseMediaConfig()
  
     return SBS_SUCCESS;
 }
-
 
 int Configuration::GetCWD()
 {

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.11)
 project(webrtc)
 
 message("Build webrtc ...")
-
+set (CMAKE_POSITION_INDEPENDENT_CODE TRUE) 
 add_subdirectory(system_wrappers)
 add_subdirectory(api)
 add_subdirectory(rtc_base)
@@ -59,7 +59,9 @@ add_library(webrtc STATIC
 	$<TARGET_OBJECTS:rtc_audiomixer> 
 	$<TARGET_OBJECTS:rtc_audiodevice> 
     )
-#target_link_libraries(webrtc rtc_api)
+
+#set_property(TARGET webrtc PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 #add_custom_command(OUTPUT lib${PROJECT_NAME}.a
 #        COMMAND ar ARGS -x ${CMAKE_CURRENT_BINARY_DIR}/system_wrappers/librtc_systemwrappers.a
 #        COMMAND ar ARGS -x ${CMAKE_CURRENT_BINARY_DIR}/rtc_base/librtc_base.a

@@ -4,5 +4,5 @@ project(spiritbreaker)
 message("Build spiritbreaker ...")
 
 add_subdirectory(third_party/webrtc)
-add_subdirectory(sbs)
+#add_subdirectory(sbs)
 

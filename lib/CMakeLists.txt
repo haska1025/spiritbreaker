@@ -8,7 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated")
 add_definitions(-DWEBRTC_POSIX)
 add_definitions(-DBUILDING_NODE_EXTENSION)
 
-file(GLOB sbs_srcs ../src/sbs/*.h ../src/sbs/*.cpp ./src/*.cxx)
+file(GLOB sbs_srcs ../src/sbs/*.h ../src/sbs/*.cpp)
 
 source_group(source FILES ${sbs_srcs})
 
@@ -37,7 +37,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 
 # Essential include files to build a node addon,
 # You should add this line in every CMake.js based project
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_JS_INC})
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_JS_INC} node_modules/nan/)
 
 # Essential library files to link to a node addon
 # You should add this line in every CMake.js based project

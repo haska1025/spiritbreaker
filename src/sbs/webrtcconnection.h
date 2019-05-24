@@ -9,13 +9,11 @@
 #include <future>
 
 #include "sbs_decl.h"
-#include "webrtc_connection_interface.h"
 
 SBS_NAMESPACE_DECL_BEGIN
 
 class WebRtcConnection: public webrtc::PeerConnectionObserver,
-    public rtc::RefCountInterface,
-    public WebRtcConnectionInterface 
+    public rtc::RefCountInterface
 {
 public:
     WebRtcConnection();
@@ -25,14 +23,14 @@ public:
     // WebRtcConnectionInterface implementation.
     //
 
-    int Initialize() override;
-    int Close() override;
+    int Initialize();
+    int Close();
 
-    int SetRemoteSdp(const std::string &sdp) override;
-    int SetLocalSdp(const std::string &sdp) override;
+    int SetRemoteSdp(const std::string &sdp);
+    int SetLocalSdp(const std::string &sdp);
 
-    std::string GetLocalSdp() override{return local_sdp_;}
-    std::string GetRemoteSdp()override {return remote_sdp_;}
+    std::string GetLocalSdp(){return local_sdp_;}
+    std::string GetRemoteSdp(){return remote_sdp_;}
 
     //
     // PeerConnectionObserver implementation.
@@ -56,34 +54,28 @@ public:
         : public webrtc::CreateSessionDescriptionObserver
     {
     public:
-        static DummyCreateSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn,
-                std::shared_ptr<std::promise<std::string>> p);
+        static DummyCreateSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn);
 
-        DummyCreateSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn,
-                std::shared_ptr<std::promise<std::string>> p):conn_(conn),result_promise_{p}{}
+        DummyCreateSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn):conn_(conn){}
 
         void OnSuccess(webrtc::SessionDescriptionInterface* desc) override;
         void OnFailure(webrtc::RTCError error) override;
     private:
         rtc::scoped_refptr<WebRtcConnection> conn_;
-        std::shared_ptr<std::promise<std::string>> result_promise_;
     };
 
     class DummySetSessionDescriptionObserver
         : public webrtc::SetSessionDescriptionObserver 
     {
     public:
-        static DummySetSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn,
-                std::shared_ptr<std::promise<std::string>> p); 
+        static DummySetSessionDescriptionObserver* Create(rtc::scoped_refptr<WebRtcConnection> conn); 
 
-        DummySetSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn, 
-                std::shared_ptr<std::promise<std::string>> p):conn_(conn),result_promise_{p}{}
+        DummySetSessionDescriptionObserver(rtc::scoped_refptr<WebRtcConnection> conn):conn_(conn){}
 
         virtual void OnSuccess() override;
         virtual void OnFailure(webrtc::RTCError error) override; 
     private:
         rtc::scoped_refptr<WebRtcConnection> conn_;
-        std::shared_ptr<std::promise<std::string>> result_promise_;
     };
 
 

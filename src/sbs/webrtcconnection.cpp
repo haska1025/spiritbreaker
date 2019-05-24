@@ -6,10 +6,9 @@
 #include <api/jsep_session_description.h>
 
 WebRtcConnection::DummyCreateSessionDescriptionObserver* 
-WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(rtc::scoped_refptr<WebRtcConnection> conn, 
-        std::shared_ptr<std::promise<std::string>> p)
+WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(rtc::scoped_refptr<WebRtcConnection> conn)
 {
-    return new rtc::RefCountedObject<WebRtcConnection::DummyCreateSessionDescriptionObserver>(conn, p);
+    return new rtc::RefCountedObject<WebRtcConnection::DummyCreateSessionDescriptionObserver>(conn);
 }
 void WebRtcConnection::DummyCreateSessionDescriptionObserver::OnSuccess(webrtc::SessionDescriptionInterface* desc) 
 {
@@ -20,8 +19,7 @@ void WebRtcConnection::DummyCreateSessionDescriptionObserver::OnSuccess(webrtc::
     conn_->SetLocalSdp(sdp);
 
     // Just has answer
-    conn_->peer_conn()->SetLocalDescription(WebRtcConnection::DummySetSessionDescriptionObserver::Create(conn_, result_promise_),
-            desc);
+    conn_->peer_conn()->SetLocalDescription(WebRtcConnection::DummySetSessionDescriptionObserver::Create(conn_), desc);
 
 }
 void WebRtcConnection::DummyCreateSessionDescriptionObserver::OnFailure(webrtc::RTCError error)
@@ -30,10 +28,9 @@ void WebRtcConnection::DummyCreateSessionDescriptionObserver::OnFailure(webrtc::
 }
 
 WebRtcConnection::DummySetSessionDescriptionObserver*
-WebRtcConnection::DummySetSessionDescriptionObserver::Create(rtc::scoped_refptr<WebRtcConnection> conn, 
-        std::shared_ptr<std::promise<std::string>> p)
+WebRtcConnection::DummySetSessionDescriptionObserver::Create(rtc::scoped_refptr<WebRtcConnection> conn)
 {
-    return new rtc::RefCountedObject<WebRtcConnection::DummySetSessionDescriptionObserver>(conn, p);
+    return new rtc::RefCountedObject<WebRtcConnection::DummySetSessionDescriptionObserver>(conn);
 }
 void WebRtcConnection::DummySetSessionDescriptionObserver::OnSuccess()
 {
@@ -41,10 +38,10 @@ void WebRtcConnection::DummySetSessionDescriptionObserver::OnSuccess()
 
     std::string sdp = conn_->GetLocalSdp();
     if (!sdp.empty()){
-        result_promise_->set_value(sdp);
+        // Call other functions
     }else{
         // The callback signaled by the SetRemoteDescription
-        conn_->peer_conn()->CreateAnswer(WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(conn_, result_promise_),
+        conn_->peer_conn()->CreateAnswer(WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(conn_),
                 webrtc::PeerConnectionInterface::RTCOfferAnswerOptions());
     }
 
@@ -67,7 +64,7 @@ int WebRtcConnection::Initialize()
 {
     webrtc::PeerConnectionInterface::RTCConfiguration config;
     config.sdp_semantics = webrtc::SdpSemantics::kUnifiedPlan;
-    config.enable_dtls_srtp = true;
+    config.enable_dtls_srtp = false;
     webrtc::PeerConnectionInterface::IceServer server;
     server.uri = "stun:192.168.29.91:3478"; 
     config.servers.push_back(server);
@@ -96,20 +93,10 @@ int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
         return SBS_GENERAL_ERROR;
     }
 
-    std::string tmpsdp;
-    desc->ToString(&tmpsdp);
-
-    RTC_LOG(LS_INFO) << "After deserialize===" << tmpsdp;
-
-    std::shared_ptr<std::promise<std::string>> answer_promise = std::make_shared<std::promise<std::string>>();
-
-    std::future<std::string> answer_future = answer_promise->get_future();
-
     peer_connection_->SetRemoteDescription(
-            WebRtcConnection::DummySetSessionDescriptionObserver::Create(this, answer_promise),
+            WebRtcConnection::DummySetSessionDescriptionObserver::Create(this),
             desc.release());
 
-    answer_future.get();
     return SBS_SUCCESS;
 }
 

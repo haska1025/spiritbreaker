@@ -4,6 +4,7 @@
 #include "sbs_error.h"
 #include "sbs_log.h"
 #include "room_mgr.h"
+#include "webrtc_connection_wrap.h"
 
 int SBSMgr::Initialize()
 {
@@ -30,4 +31,31 @@ int SBSMgr::Close()
     RoomMgr::Instance()->Close();
     return 0;
 }
+
+#include <nan.h>
+
+void Initialize(const Nan::FunctionCallbackInfo<v8::Value>& info)
+{
+    int rc = SBSMgr::Initialize();
+    info.GetReturnValue().Set(rc);
+}
+
+void Close(const Nan::FunctionCallbackInfo<v8::Value>& info)
+{
+    int rc = SBSMgr::Initialize();
+    info.GetReturnValue().Set(rc);
+}
+
+void Init(v8::Local<v8::Object> exports) {
+    exports->Set(Nan::New("initialize").ToLocalChecked(),
+            Nan::New<v8::FunctionTemplate>(Initialize)->GetFunction());
+
+    exports->Set(Nan::New("close").ToLocalChecked(),
+            Nan::New<v8::FunctionTemplate>(Close)->GetFunction());
+
+    WebRtcConnectionWrap::Init(exports);
+}
+
+NODE_MODULE(sbs, Init)
+
 

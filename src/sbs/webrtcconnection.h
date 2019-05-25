@@ -12,11 +12,13 @@
 
 SBS_NAMESPACE_DECL_BEGIN
 
+class WebRtcConnectionNotify;
+
 class WebRtcConnection: public webrtc::PeerConnectionObserver,
     public rtc::RefCountInterface
 {
 public:
-    WebRtcConnection();
+    WebRtcConnection(WebRtcConnectionNotify *notify);
     ~WebRtcConnection();
 
     //
@@ -86,6 +88,8 @@ private:
     std::string local_sdp_;
     // The remote sdp
     std::string remote_sdp_;
+
+    WebRtcConnectionNotify *notify_;
 };
 
 SBS_NAMESPACE_DECL_END

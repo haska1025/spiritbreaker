@@ -1,4 +1,5 @@
 #include "webrtcconnection.h"
+#include "webrtc_connection_notify.h"
 #include "room_mgr.h"
 #include "sbs_error.h"
 
@@ -39,6 +40,8 @@ void WebRtcConnection::DummySetSessionDescriptionObserver::OnSuccess()
     std::string sdp = conn_->GetLocalSdp();
     if (!sdp.empty()){
         // Call other functions
+        conn_->notify_->OnLocalSDP();
+
     }else{
         // The callback signaled by the SetRemoteDescription
         conn_->peer_conn()->CreateAnswer(WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(conn_),
@@ -53,7 +56,7 @@ void WebRtcConnection::DummySetSessionDescriptionObserver::OnFailure(webrtc::RTC
 
 
 
-WebRtcConnection::WebRtcConnection()
+WebRtcConnection::WebRtcConnection(WebRtcConnectionNotify *notify):notify_(notify)
 {
 }
 WebRtcConnection::~WebRtcConnection()
@@ -151,6 +154,8 @@ void WebRtcConnection::OnIceCandidate(const webrtc::IceCandidateInterface* candi
         << " sdp_mindex=" << candidate->sdp_mline_index()
         << " server_url=" << candidate->server_url()
         << " candidate_sdp=" << sdp_candidate; 
+
+    notify_->OnCandidate();
 }
 void WebRtcConnection::OnIceConnectionReceivingChange(bool receiving)
 {

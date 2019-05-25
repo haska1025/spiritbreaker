@@ -6,16 +6,21 @@
 
 #include "sbs_decl.h"
 #include "webrtcconnection.h"
+#include "webrtc_connection_notify.h"
 
 SBS_NAMESPACE_DECL_BEGIN
 
-class SBS_DLL_DECL WebRtcConnectionWrap: public Nan::ObjectWrap
+class SBS_DLL_DECL WebRtcConnectionWrap: public Nan::ObjectWrap,
+    public WebRtcConnectionNotify
 {
 public:
     static NAN_MODULE_INIT(Init);
 
+    void OnLocalSDP() override;
+    void OnCandidate() override;
+
 private:
-    WebRtcConnectionWrap();
+    WebRtcConnectionWrap(v8::Handle<v8::Object> object);
     ~WebRtcConnectionWrap();
 
     static NAN_METHOD(New);
@@ -29,6 +34,8 @@ private:
     static NAN_METHOD(GetRemoteSdp);
 
     static Nan::Persistent<v8::Function> constructor_;
+
+    Nan::Persistent<v8::Object> persistent_;
 
     rtc::scoped_refptr<WebRtcConnection> webrtc_;
     rtc::Thread *sbs_thr_{nullptr};

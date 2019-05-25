@@ -2,18 +2,58 @@
 #include "webrtcconnection.h"
 #include "room_mgr.h"
 #include "sbs_error.h"
+#include "sbs_mgr.h"
 
 #include <api/proxy.h>
 #include <rtc_base/bind.h>
 
 Nan::Persistent<v8::Function> WebRtcConnectionWrap::constructor_;
-WebRtcConnectionWrap::WebRtcConnectionWrap()
+WebRtcConnectionWrap::WebRtcConnectionWrap(v8::Handle<v8::Object> object):persistent_(object)
 {
     sbs_thr_ = RoomMgr::Instance()->sbs_thr();
 }
 
 WebRtcConnectionWrap::~WebRtcConnectionWrap()
 {
+}
+
+void WebRtcConnectionWrap::OnLocalSDP()
+{
+    //Run function on main node thread
+    SBSMgr::MsgQueue()->push([=](){
+            RTC_LOG(LS_INFO) << "Callback onLocalSdp";
+            Nan::HandleScope scope;
+            int i = 0;
+            v8::Local<v8::Value> argv2[0];
+
+            //Create callback function from object
+            //v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(handle()->Get(Nan::New("onLocalSdp").ToLocalChecked()));
+            //Call object method with arguments
+            v8::Local<v8::Object> local = Nan::New(persistent_);
+            Nan::AsyncResource ar("sbs_onLocalSdp");
+            ar.runInAsyncScope(local, "onLocalSdp", 0, nullptr);
+            //Nan::MakeCallback(handle(), callback, i, argv2);
+        });
+}
+
+void WebRtcConnectionWrap::OnCandidate()
+{
+  //Run function on main node thread
+    SBSMgr::MsgQueue()->push([=](){
+            RTC_LOG(LS_INFO) << "Callback onCandidate";
+            Nan::HandleScope scope;
+            int i = 0;
+            v8::Local<v8::Value> argv2[0];
+
+            //Create callback function from object
+            //v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(handle()->Get(Nan::New("onCandidate").ToLocalChecked()));
+            //Call object method with arguments
+            v8::Local<v8::Object> local = Nan::New(persistent_);
+            Nan::AsyncResource ar("sbs_onCandidate");
+            ar.runInAsyncScope(local, "onCandidate", i, argv2);
+            //Nan::MakeCallback(handle(), callback, i, argv2);
+        });
+
 }
 
 NAN_MODULE_INIT(WebRtcConnectionWrap::Init)
@@ -40,7 +80,7 @@ NAN_METHOD(WebRtcConnectionWrap::New)
         return Nan::ThrowError("`new` required");
     }
 
-    WebRtcConnectionWrap *obj = new WebRtcConnectionWrap();
+    WebRtcConnectionWrap *obj = new WebRtcConnectionWrap(v8::Handle<v8::Object>::Cast(info[0]));
     obj->Wrap(info.This());
     info.GetReturnValue().Set(info.This());
 }
@@ -51,7 +91,7 @@ NAN_METHOD(WebRtcConnectionWrap::Initialize)
 
     WebRtcConnectionWrap *obj = Nan::ObjectWrap::Unwrap<WebRtcConnectionWrap>(info.Holder());
     if (!obj->webrtc_){
-        rtc::scoped_refptr<WebRtcConnection> conn(new rtc::RefCountedObject<WebRtcConnection>());
+        rtc::scoped_refptr<WebRtcConnection> conn(new rtc::RefCountedObject<WebRtcConnection>(obj));
         if (!conn){
             return Nan::ThrowError("Create webrt connection obj failed.");
         }
@@ -136,4 +176,5 @@ NAN_METHOD(WebRtcConnectionWrap::GetRemoteSdp)
 
     info.GetReturnValue().Set(Nan::Encode(sdp.c_str(), sdp.length(), Nan::Encoding::UTF8));
 }
+
 

@@ -6,6 +6,8 @@
 #include "room_mgr.h"
 #include "webrtc_connection_wrap.h"
 
+MessageQueue SBSMgr::msg_queue_;
+
 int SBSMgr::Initialize()
 {
     int rc = SBS_SUCCESS;
@@ -16,6 +18,12 @@ int SBSMgr::Initialize()
     rc = RoomMgr::Instance()->Initialize();
     if (rc != SBS_SUCCESS){
         RTC_LOG(LS_ERROR) << "Init room manager failed! rc=" << rc;
+        return rc;
+    }
+
+    rc = msg_queue_.init();
+    if (rc != SBS_SUCCESS){
+        RTC_LOG(LS_ERROR) << "Init message queue failed! rc=" << rc;
         return rc;
     }
 

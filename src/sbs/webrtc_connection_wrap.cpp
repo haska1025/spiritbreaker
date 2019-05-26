@@ -23,8 +23,6 @@ void WebRtcConnectionWrap::OnLocalSDP()
     SBSMgr::MsgQueue()->push([=](){
             RTC_LOG(LS_INFO) << "Callback onLocalSdp";
             Nan::HandleScope scope;
-            int i = 0;
-            v8::Local<v8::Value> argv2[0];
 
             //Create callback function from object
             //v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(handle()->Get(Nan::New("onLocalSdp").ToLocalChecked()));
@@ -36,14 +34,15 @@ void WebRtcConnectionWrap::OnLocalSDP()
         });
 }
 
-void WebRtcConnectionWrap::OnCandidate()
+void WebRtcConnectionWrap::OnCandidate(const std::string &candidate)
 {
   //Run function on main node thread
     SBSMgr::MsgQueue()->push([=](){
             RTC_LOG(LS_INFO) << "Callback onCandidate";
             Nan::HandleScope scope;
             int i = 0;
-            v8::Local<v8::Value> argv2[0];
+            v8::Local<v8::Value> argv2[1];
+            argv2[i++] = Nan::Encode(candidate.c_str(), candidate.length(), Nan::Encoding::UTF8);
 
             //Create callback function from object
             //v8::Local<v8::Function> callback = v8::Local<v8::Function>::Cast(handle()->Get(Nan::New("onCandidate").ToLocalChecked()));

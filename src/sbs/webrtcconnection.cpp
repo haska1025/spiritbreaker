@@ -5,6 +5,11 @@
 
 #include <pc/webrtc_sdp.h>
 #include <api/jsep_session_description.h>
+#include <rtc_base/strings/json.h>
+
+const char kCandidateSdpMidName[] = "sdpMid";
+const char kCandidateSdpMlineIndexName[] = "sdpMLineIndex";
+const char kCandidateSdpName[] = "candidate";
 
 WebRtcConnection::DummyCreateSessionDescriptionObserver* 
 WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(rtc::scoped_refptr<WebRtcConnection> conn)
@@ -146,16 +151,20 @@ void WebRtcConnection::OnIceGatheringChange( webrtc::PeerConnectionInterface::Ic
 }
 void WebRtcConnection::OnIceCandidate(const webrtc::IceCandidateInterface* candidate)
 {
-    std::string sdp_candidate;
+    Json::StyledWriter writer;
+    Json::Value jmessage;
 
-    candidate->ToString(&sdp_candidate);
+    jmessage[kCandidateSdpMidName] = candidate->sdp_mid();
+    jmessage[kCandidateSdpMlineIndexName] = candidate->sdp_mline_index();
+    std::string sdp;
+    if (!candidate->ToString(&sdp)) {
+        RTC_LOG(LS_ERROR) << "Failed to serialize candidate";
+        return;
+    }
+    jmessage[kCandidateSdpName] = sdp;
 
-    RTC_LOG(LS_INFO) << "OnIceCandidate sdpMid=" << candidate->sdp_mid() 
-        << " sdp_mindex=" << candidate->sdp_mline_index()
-        << " server_url=" << candidate->server_url()
-        << " candidate_sdp=" << sdp_candidate; 
 
-    notify_->OnCandidate();
+    notify_->OnCandidate(rtc::JsonValueToString(jmessage));
 }
 void WebRtcConnection::OnIceConnectionReceivingChange(bool receiving)
 {

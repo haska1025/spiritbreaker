@@ -17,7 +17,7 @@ public:
     static NAN_MODULE_INIT(Init);
 
     void OnLocalSDP() override;
-    void OnCandidate() override;
+    void OnCandidate(const std::string &candidate) override;
 
 private:
     WebRtcConnectionWrap(v8::Handle<v8::Object> object);

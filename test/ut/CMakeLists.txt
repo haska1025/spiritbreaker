@@ -26,8 +26,8 @@ pkg_check_modules(CPPUNIT cppunit)
 
 add_executable(sbs_ut ${ut_srcs})
 
-target_include_directories(sbs_ut PUBLIC ../third_party/webrtc/)
-target_include_directories(sbs_ut PUBLIC ../third_party/abseil-cpp/)
+target_include_directories(sbs_ut PUBLIC ../../src/third_party/webrtc/)
+target_include_directories(sbs_ut PUBLIC ../../src/third_party/abseil-cpp/)
 target_include_directories(sbs_ut PUBLIC ${JSONCPP_INCLUDE_DIRS})
 target_link_libraries(sbs_ut sbs 
         webrtc

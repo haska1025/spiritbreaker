@@ -898,6 +898,8 @@ bool PeerConnection::Initialize(
     PeerConnectionDependencies dependencies) {
   TRACE_EVENT0("webrtc", "PeerConnection::Initialize");
 
+  RTC_LOG(LS_INFO) << "PeerConnection::Initialize";
+
   RTCError config_error = ValidateConfiguration(configuration);
   if (!config_error.ok()) {
     RTC_LOG(LS_ERROR) << "Invalid configuration: " << config_error.message();
@@ -930,6 +932,10 @@ bool PeerConnection::Initialize(
       ParseIceServers(configuration.servers, &stun_servers, &turn_servers);
   if (parse_error != RTCErrorType::NONE) {
     return false;
+  }
+
+  for (auto addr : stun_servers){
+      RTC_LOG(LS_INFO) << "The stun addr : " << addr.ToString();
   }
 
   // The port allocator lives on the network thread and should be initialized
@@ -1932,6 +1938,9 @@ PeerConnection::GetReceivingTransceiversOfType(cricket::MediaType media_type) {
 void PeerConnection::CreateAnswer(CreateSessionDescriptionObserver* observer,
                                   const RTCOfferAnswerOptions& options) {
   TRACE_EVENT0("webrtc", "PeerConnection::CreateAnswer");
+
+  RTC_LOG(LS_INFO) << "PeerConnection::CreateAnswer";
+
   if (!observer) {
     RTC_LOG(LS_ERROR) << "CreateAnswer - observer is NULL.";
     return;
@@ -1974,6 +1983,8 @@ void PeerConnection::SetLocalDescription(
     SetSessionDescriptionObserver* observer,
     SessionDescriptionInterface* desc_ptr) {
   TRACE_EVENT0("webrtc", "PeerConnection::SetLocalDescription");
+
+  RTC_LOG(LS_INFO) << "Enter PeerConnection::SetLocalDescription";
 
   // The SetLocalDescription contract is that we take ownership of the session
   // description regardless of the outcome, so wrap it in a unique_ptr right
@@ -2060,6 +2071,8 @@ RTCError PeerConnection::ApplyLocalDescription(
     std::unique_ptr<SessionDescriptionInterface> desc) {
   RTC_DCHECK_RUN_ON(signaling_thread());
   RTC_DCHECK(desc);
+
+  RTC_LOG(LS_INFO) << "Enter PeerConnection::ApplyLocalDescription";
 
   // Update stats here so that we have the most recent stats for tracks and
   // streams that might be removed by updating the session description.
@@ -2328,6 +2341,8 @@ void PeerConnection::SetRemoteDescription(
     rtc::scoped_refptr<SetRemoteDescriptionObserverInterface> observer) {
   TRACE_EVENT0("webrtc", "PeerConnection::SetRemoteDescription");
 
+  RTC_LOG(LS_INFO) << "Enter PeerConnection::SetRemoteDescription";
+
   if (!observer) {
     RTC_LOG(LS_ERROR) << "SetRemoteDescription - observer is NULL.";
     return;
@@ -2407,6 +2422,8 @@ RTCError PeerConnection::ApplyRemoteDescription(
     std::unique_ptr<SessionDescriptionInterface> desc) {
   RTC_DCHECK_RUN_ON(signaling_thread());
   RTC_DCHECK(desc);
+
+  RTC_LOG(LS_INFO) << "Enter PeerConnection::ApplyRemoteDescription";
 
   // Update stats here so that we have the most recent stats for tracks and
   // streams that might be removed by updating the session description.
@@ -2866,7 +2883,12 @@ RTCError PeerConnection::UpdateTransceiverChannel(
     const cricket::ContentGroup* bundle_group) {
   RTC_DCHECK(IsUnifiedPlan());
   RTC_DCHECK(transceiver);
+
+
   cricket::ChannelInterface* channel = transceiver->internal()->channel();
+
+  RTC_LOG(LS_INFO) << "Enter PeerConnection::UpdateTransceiverChannel rejected = " << content.rejected;
+
   if (content.rejected) {
     if (channel) {
       transceiver->internal()->SetChannel(nullptr);
@@ -5426,6 +5448,8 @@ RTCError PeerConnection::PushdownTransportDescription(
     cricket::ContentSource source,
     SdpType type) {
   RTC_DCHECK_RUN_ON(signaling_thread());
+
+  RTC_LOG(LS_INFO) << "Enter PeerConnection::PushdownTransportDescription";
 
   if (source == cricket::CS_LOCAL) {
     const SessionDescriptionInterface* sdesc = local_description();

@@ -244,6 +244,9 @@ void WebRtcSessionDescriptionFactory::CreateOffer(
 void WebRtcSessionDescriptionFactory::CreateAnswer(
     CreateSessionDescriptionObserver* observer,
     const cricket::MediaSessionOptions& session_options) {
+
+    RTC_LOG(LS_INFO) << "WebRtcSessionDescriptionFactory::CreateAnswer";
+
   std::string error = "CreateAnswer";
   if (certificate_request_state_ == CERTIFICATE_FAILED) {
     error += kFailedDueToIdentityFailed;

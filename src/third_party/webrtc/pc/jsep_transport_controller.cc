@@ -101,6 +101,9 @@ JsepTransportController::~JsepTransportController() {
 RTCError JsepTransportController::SetLocalDescription(
     SdpType type,
     const cricket::SessionDescription* description) {
+
+    RTC_LOG(LS_INFO) << "Enter JsepTransportController::SetLocalDescription";
+
   if (!network_thread_->IsCurrent()) {
     return network_thread_->Invoke<RTCError>(
         RTC_FROM_HERE, [=] { return SetLocalDescription(type, description); });
@@ -120,6 +123,9 @@ RTCError JsepTransportController::SetLocalDescription(
 RTCError JsepTransportController::SetRemoteDescription(
     SdpType type,
     const cricket::SessionDescription* description) {
+
+    RTC_LOG(LS_INFO) << "Enter JsepTransportController::SetRemoteDescription";
+
   if (!network_thread_->IsCurrent()) {
     return network_thread_->Invoke<RTCError>(
         RTC_FROM_HERE, [=] { return SetRemoteDescription(type, description); });
@@ -289,6 +295,8 @@ JsepTransportController::GetRemoteSSLCertChain(
 }
 
 void JsepTransportController::MaybeStartGathering() {
+  RTC_LOG(LS_INFO) << "Enter JsepTransportController::MaybeStartGathering";
+
   if (!network_thread_->IsCurrent()) {
     network_thread_->Invoke<void>(RTC_FROM_HERE,
                                   [&] { MaybeStartGathering(); });
@@ -571,6 +579,8 @@ RTCError JsepTransportController::ApplyDescription_n(
     const cricket::SessionDescription* description) {
   RTC_DCHECK(network_thread_->IsCurrent());
   RTC_DCHECK(description);
+
+  RTC_LOG(LS_INFO) << "JsepTransportController::ApplyDescription_n local=" << local << " type=" << (int)type; 
 
   if (local) {
     local_desc_ = description;
@@ -1056,8 +1066,11 @@ RTCError JsepTransportController::MaybeCreateJsepTransport(
   RTC_DCHECK(network_thread_->IsCurrent());
   cricket::JsepTransport* transport = GetJsepTransportByName(content_info.name);
   if (transport) {
-    return RTCError::OK();
+      RTC_LOG(LS_INFO) << "JsepTransportController::MaybeCreateJsepTransport the transport exist. local = " << local << " name=" << content_info.name;
+      return RTCError::OK();
   }
+
+  RTC_LOG(LS_INFO) << "JsepTransportController::MaybeCreateJsepTransport local = " << local << " name=" << content_info.name;
 
   const cricket::MediaContentDescription* content_desc =
       static_cast<const cricket::MediaContentDescription*>(

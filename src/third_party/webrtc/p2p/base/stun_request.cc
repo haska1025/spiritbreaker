@@ -56,6 +56,8 @@ void StunRequestManager::Send(StunRequest* request) {
 }
 
 void StunRequestManager::SendDelayed(StunRequest* request, int delay) {
+    RTC_LOG(LS_INFO) << "Enter StunRequestManager::SendDelayed. delay = " << delay;
+
   request->set_manager(this);
   RTC_DCHECK(requests_.find(request->id()) == requests_.end());
   request->set_origin(origin_);
@@ -224,6 +226,7 @@ void StunRequest::OnMessage(rtc::Message* pmsg) {
   RTC_DCHECK(manager_ != NULL);
   RTC_DCHECK(pmsg->message_id == MSG_STUN_SEND);
 
+  RTC_LOG(LS_INFO) << "Enter StunRequest::OnMessage timeout=" << timeout_; 
   if (timeout_) {
     OnTimeout();
     delete this;

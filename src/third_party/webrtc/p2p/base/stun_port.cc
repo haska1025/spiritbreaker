@@ -231,12 +231,18 @@ UDPPort::~UDPPort() {
 
 void UDPPort::PrepareAddress() {
   RTC_DCHECK(requests_.empty());
+
+  RTC_LOG(LS_INFO) << "Enter UDPPort::PrepareAddress sockstate=" << socket_->GetState();
+
   if (socket_->GetState() == rtc::AsyncPacketSocket::STATE_BOUND) {
     OnLocalAddressReady(socket_, socket_->GetLocalAddress());
   }
 }
 
 void UDPPort::MaybePrepareStunCandidate() {
+
+    RTC_LOG(LS_INFO) << "Enter UDPPort::MaybePrepareStunCandidate server_addr_len = " << server_addresses_.size();
+
   // Sending binding request to the STUN server if address is available to
   // prepare STUN candidate.
   if (!server_addresses_.empty()) {
@@ -439,6 +445,8 @@ void UDPPort::OnResolveResult(const rtc::SocketAddress& input, int error) {
 }
 
 void UDPPort::SendStunBindingRequest(const rtc::SocketAddress& stun_addr) {
+    RTC_LOG(LS_INFO) << "Enter UDPPort::SendStunBindingRequest stun_addr = " << stun_addr.ToString();
+
   if (stun_addr.IsUnresolvedIP()) {
     ResolveStunAddress(stun_addr);
 

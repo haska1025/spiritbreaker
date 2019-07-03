@@ -415,6 +415,8 @@ void Port::AddAddress(const rtc::SocketAddress& address,
                       uint32_t relay_preference,
                       const std::string& url,
                       bool is_final) {
+    RTC_LOG(LS_INFO) << "Enter Port::AddAddress";
+
   if (protocol == TCP_PROTOCOL_NAME && type == LOCAL_PORT_TYPE) {
     RTC_DCHECK(!tcptype.empty());
   }
@@ -477,6 +479,8 @@ bool Port::MaybeObfuscateAddress(Candidate* c,
 }
 
 void Port::FinishAddingAddress(const Candidate& c, bool is_final) {
+    RTC_LOG(LS_INFO) << "Enter Port::FinishAddingAddress is_final=" << is_final << " candidate=" << c.ToString();
+
   candidates_.push_back(c);
   SignalCandidateReady(this, c);
 

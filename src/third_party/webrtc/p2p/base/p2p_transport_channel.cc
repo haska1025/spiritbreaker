@@ -713,13 +713,21 @@ int P2PTransportChannel::check_receiving_interval() const {
 }
 
 void P2PTransportChannel::MaybeStartGathering() {
+  RTC_LOG(LS_INFO) << "Enter P2PTransportChannel::MaybeStartGathering";
+
   if (ice_parameters_.ufrag.empty() || ice_parameters_.pwd.empty()) {
+
     RTC_LOG(LS_ERROR)
         << "Cannot gather candidates because ICE parameters are empty"
            " ufrag: " << ice_parameters_.ufrag
         << " pwd: " << ice_parameters_.pwd;
     return;
   }
+
+  for (auto addr : allocator_->stun_servers()){
+      RTC_LOG(LS_INFO) << "The stun addr : " << addr.ToString();
+  }
+
   // Start gathering if we never started before, or if an ICE restart occurred.
   if (allocator_sessions_.empty() ||
       IceCredentialsChanged(allocator_sessions_.back()->ice_ufrag(),

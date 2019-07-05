@@ -1581,6 +1581,8 @@ void AllocationSequence::OnReadPacket(rtc::AsyncPacketSocket* socket,
                                       const int64_t& packet_time_us) {
   RTC_DCHECK(socket == udp_socket_.get());
 
+  RTC_LOG(LS_VERBOSE) << "AllocationSequence::OnReadPacket size = " << size << " packet_time_us = " << packet_time_us;
+
   bool turn_port_found = false;
 
   // Try to find the TurnPort that matches the remote address. Note that the

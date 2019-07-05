@@ -326,6 +326,8 @@ bool UDPPort::HandleIncomingPacket(rtc::AsyncPacketSocket* socket,
                                    size_t size,
                                    const rtc::SocketAddress& remote_addr,
                                    int64_t packet_time_us) {
+    RTC_LOG(LS_VERBOSE) << "UDPPort::HandleIncomingPacket size=" << size << "remoteaddr=" << remote_addr.ToString();
+
   // All packets given to UDP port will be consumed.
   OnReadPacket(socket, data, size, remote_addr, packet_time_us);
   return true;

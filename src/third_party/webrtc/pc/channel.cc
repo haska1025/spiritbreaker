@@ -1168,7 +1168,7 @@ bool RtpDataChannel::SetLocalContent_w(const MediaContentDescription* content,
                                        std::string* error_desc) {
   TRACE_EVENT0("webrtc", "RtpDataChannel::SetLocalContent_w");
   RTC_DCHECK_RUN_ON(worker_thread());
-  RTC_LOG(LS_INFO) << "Setting local data description";
+  RTC_LOG(LS_INFO) << "RtpDataChannel::SetLocalContent_w Setting local content description";
 
   RTC_DCHECK(content);
   if (!content) {

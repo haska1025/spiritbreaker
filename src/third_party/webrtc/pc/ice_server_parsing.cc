@@ -307,7 +307,7 @@ RTCErrorType ParseIceServers(
       }
     } else {
       RTC_LOG(LS_ERROR) << "Empty uri.";
-      return RTCErrorType::SYNTAX_ERROR;
+//      return RTCErrorType::SYNTAX_ERROR;
     }
   }
   // Candidates must have unique priorities, so that connectivity checks

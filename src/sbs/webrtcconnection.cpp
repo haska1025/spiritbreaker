@@ -74,7 +74,7 @@ int WebRtcConnection::Initialize()
     config.sdp_semantics = webrtc::SdpSemantics::kUnifiedPlan;
     config.enable_dtls_srtp = false;
     webrtc::PeerConnectionInterface::IceServer server;
-    server.uri = "stun:192.168.29.91:3478"; 
+//    server.uri = "stun:192.168.29.91:3478"; 
     config.servers.push_back(server);
 
     peer_connection_ = RoomMgr::Instance()->pc_factory()->CreatePeerConnection(

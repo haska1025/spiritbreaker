@@ -5159,7 +5159,8 @@ bool PeerConnection::InitializePortAllocator_n(
   port_allocator_flags_ = port_allocator_->flags();
   port_allocator_flags_ |= cricket::PORTALLOCATOR_ENABLE_SHARED_SOCKET |
                            cricket::PORTALLOCATOR_ENABLE_IPV6 |
-                           cricket::PORTALLOCATOR_ENABLE_IPV6_ON_WIFI;
+                           cricket::PORTALLOCATOR_ENABLE_IPV6_ON_WIFI|
+                           cricket::PORTALLOCATOR_DISABLE_ADAPTER_ENUMERATION;
   // If the disable-IPv6 flag was specified, we'll not override it
   // by experiment.
   if (configuration.disable_ipv6) {

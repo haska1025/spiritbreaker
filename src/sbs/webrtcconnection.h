@@ -80,6 +80,7 @@ public:
         rtc::scoped_refptr<WebRtcConnection> conn_;
     };
 
+    void getKeyAndCert(const char *file, std::string &key);
 
 private:
     rtc::scoped_refptr<webrtc::PeerConnectionInterface> peer_connection_{nullptr};

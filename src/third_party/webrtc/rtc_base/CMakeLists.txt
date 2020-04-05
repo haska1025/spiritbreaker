@@ -22,7 +22,7 @@ pkg_check_modules(JSONCPP jsoncpp)
 
 target_include_directories(rtc_base PRIVATE ..)
 target_include_directories(rtc_base PRIVATE ../../abseil-cpp/)
-target_include_directories(rtc_base PRIVATE ../../boringssl/include/)
+target_include_directories(rtc_base PRIVATE ../../boringssl/src/include/)
 target_include_directories(rtc_base PUBLIC ${JSONCPP_INCLUDE_DIRS})
 
 if(WIN32)

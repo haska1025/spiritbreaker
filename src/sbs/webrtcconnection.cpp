@@ -3,9 +3,13 @@
 #include "room_mgr.h"
 #include "sbs_error.h"
 
+#include <fstream>
+#include <iostream>
+
 #include <pc/webrtc_sdp.h>
 #include <api/jsep_session_description.h>
 #include <rtc_base/strings/json.h>
+#include <rtc_base/rtc_certificate.h>
 
 const char kCandidateSdpMidName[] = "sdpMid";
 const char kCandidateSdpMlineIndexName[] = "sdpMLineIndex";
@@ -68,14 +72,38 @@ WebRtcConnection::~WebRtcConnection()
 {
 }
 
+void WebRtcConnection::getKeyAndCert(const char *file, std::string &key)
+{
+    std::ifstream ifs;
+
+    ifs.open(file, std::ifstream::in);
+    if (ifs){
+        std::ostringstream os;
+        os << ifs.rdbuf();
+        key = os.str();
+        ifs.close();
+    }
+}
+
 int WebRtcConnection::Initialize()
 {
     webrtc::PeerConnectionInterface::RTCConfiguration config;
     config.sdp_semantics = webrtc::SdpSemantics::kUnifiedPlan;
-    config.enable_dtls_srtp = false;
+    config.enable_dtls_srtp = true;
     webrtc::PeerConnectionInterface::IceServer server;
 //    server.uri = "stun:192.168.29.91:3478"; 
     config.servers.push_back(server);
+    
+    std::string strkey;
+    std::string strcert;
+
+    getKeyAndCert("/home/haska/spiritbreaker/test/server.key", strkey);
+    getKeyAndCert("/home/haska/spiritbreaker/test/server.cert", strcert);
+
+    std::cout << " key-----------------" << strkey << std::endl;
+
+    //rtc::scoped_refptr<rtc::RTCCertificate> cert = rtc::RTCCertificate::FromPEM(rtc::RTCCertificatePEM(strkey, strcert));
+    //config.certificates.push_back(cert);
 
     peer_connection_ = RoomMgr::Instance()->pc_factory()->CreatePeerConnection(
             config, nullptr, nullptr, this);

@@ -10,7 +10,7 @@ add_library(rtc_call OBJECT ${rtc_call_srcs})
 
 target_include_directories(rtc_call PUBLIC ..)
 target_include_directories(rtc_call PUBLIC ../../abseil-cpp/)
-target_include_directories(rtc_call PUBLIC ../../boringssl/src/include/)
+#target_include_directories(rtc_call PUBLIC ../../boringssl/src/include/)
 
 if(WIN32)
 	add_definitions(-DWEBRTC_WIN)

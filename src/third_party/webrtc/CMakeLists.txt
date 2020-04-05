@@ -29,7 +29,7 @@ add_subdirectory(modules/remote_bitrate_estimator)
 add_subdirectory(modules/utility)
 add_subdirectory(modules/audio_mixer)
 add_subdirectory(modules/audio_device)
-add_subdirectory(examples)
+#add_subdirectory(examples)
 
 add_library(webrtc STATIC 
 	$<TARGET_OBJECTS:rtc_systemwrappers> 

@@ -12,13 +12,13 @@ int main(int argc, char *argv[])
 
     rtc::LogMessage::AddLogToStream(new ConsoleLogSink(), rtc::LS_VERBOSE);
     RTC_LOG(LS_ERROR) << "Start spirit breaker....";
-
+/*
     rc = Configuration::Initialize();
     if (rc != 0){
         RTC_LOG(LS_ERROR) << "Initialize configuration failed! rc="<< rc;
         exit(-1);
     }
-
+*/
     rc = RoomMgr::Instance()->Initialize();
     if (rc != 0){
         exit(-1);

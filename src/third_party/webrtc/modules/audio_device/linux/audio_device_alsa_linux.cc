@@ -1487,7 +1487,7 @@ bool AudioDeviceLinuxALSA::PlayThreadProcess() {
     // maximum tixe in milliseconds to wait, a negative value means infinity
     err = LATE(snd_pcm_wait)(_handlePlayout, 2);
     if (err == 0) {  // timeout occured
-      RTC_LOG(LS_VERBOSE) << "playout snd_pcm_wait timeout";
+      //RTC_LOG(LS_VERBOSE) << "playout snd_pcm_wait timeout";
     }
 
     return true;

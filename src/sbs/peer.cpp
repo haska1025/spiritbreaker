@@ -47,7 +47,7 @@ std::shared_ptr<Publisher> Peer::GetPublisher(uint32_t id)
     return std::shared_ptr<Publisher>(nullptr);
 }
 
-bool Peer::AddSubsciber(std::shared_ptr<Subscriber> sub)
+bool Peer::AddSubscriber(std::shared_ptr<Subscriber> sub)
 {
     std::lock_guard<std::mutex> lg(subscribers_mutex_);
 
@@ -58,7 +58,7 @@ bool Peer::AddSubsciber(std::shared_ptr<Subscriber> sub)
 
     return false;
 }
-bool Peer::RemoveSubsciber(uint32_t pubid)
+bool Peer::RemoveSubscriber(uint32_t pubid)
 {
     std::lock_guard<std::mutex> lg(subscribers_mutex_);
 
@@ -69,7 +69,7 @@ bool Peer::RemoveSubsciber(uint32_t pubid)
     }
     return false;
 }
-std::shared_ptr<Subscriber> Peer::GetSubsciber(uint32_t pubid)
+std::shared_ptr<Subscriber> Peer::GetSubscriber(uint32_t pubid)
 {
     std::lock_guard<std::mutex> lg(subscribers_mutex_);
 

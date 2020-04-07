@@ -5,6 +5,7 @@
 
 #include <api/jsep.h>
 #include <api/peer_connection_interface.h>
+#include <json/json.h>
 
 #include <memory>
 #include <string>
@@ -20,11 +21,14 @@ public:
 
     int Initialize();
 
+    int CreateLocalSdp(const std::string &hint, std::string &lsdp);
     int SetRemoteSdp(const std::string &sdp);
     int SetLocalSdp(const std::string &sdp);
 
     std::string GetLocalSdp(){return local_sdp_;}
     std::string GetRemoteSdp(){return remote_sdp_;}
+
+    Json::Value GetCandidate(){return candidate_;}
 
     //
     // PeerConnectionObserver implementation.
@@ -86,6 +90,8 @@ private:
     std::string local_sdp_;
     // The remote sdp
     std::string remote_sdp_;
+
+    Json::Value candidate_;
 };
 
 SBS_NAMESPACE_DECL_END

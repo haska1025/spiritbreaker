@@ -2,8 +2,8 @@ message("Build stun probe...")
 
 file(GLOB stun_probe_src *.cc *.h)
 
-link_directories(../../../boringssl/build/ssl)
-link_directories(../../../boringssl/build/crypto)
+link_directories(../../../boringssl/src/build/ssl)
+link_directories(../../../boringssl/src/build/crypto)
 link_directories(../../../abseil-cpp/build/absl/strings)
 link_directories(../../../abseil-cpp/build/absl/base)
 link_directories(../../../abseil-cpp/build/absl/types/)

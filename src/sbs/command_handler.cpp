@@ -10,10 +10,12 @@
 BEGIN_CMD_PROCESSOR_IMPL()
     REG_PROCESSOR(HV_POST, "/room/peer/join/" , CMD_PeerJoinRoom)
     REG_PROCESSOR(HV_POST, "/room/peer/leave/" , CMD_PeerLeaveRoom)
-    REG_PROCESSOR(HV_POST, "/room/peer/publish" , CMD_PeerAddPublisher)
-    REG_PROCESSOR(HV_POST, "/room/peer/unpublish" , CMD_PeerRemovePublisher)
-    REG_PROCESSOR(HV_POST, "/room/peer/subscribe" , CMD_PeerAddSubscriber)
-    REG_PROCESSOR(HV_POST, "/room/peer/unsubscribe" , CMD_PeerRemoveSubscriber)
+    REG_PROCESSOR(HV_POST, "/room/peer/publish/" , CMD_PeerAddPublisher)
+    REG_PROCESSOR(HV_POST, "/room/peer/unpublish/" , CMD_PeerRemovePublisher)
+    REG_PROCESSOR(HV_POST, "/room/peer/subscribe/" , CMD_PeerAddSubscriber)
+    REG_PROCESSOR(HV_POST, "/room/peer/unsubscribe/" , CMD_PeerRemoveSubscriber)
+    REG_PROCESSOR(HV_POST, "/room/peer/setremotesdp/" , CMD_PeerSetRemoteSDP)
+    REG_PROCESSOR(HV_GET, "/room/peer/candidate/" , CMD_PeerGetCandidate)
 END_CMD_PROCESSOR_IMPL()
 
 int CommandHandler::HandleRequest(HttpRequestData &request, HttpResponseData &response)
@@ -44,6 +46,7 @@ int CommandHandler::HandleRequest(HttpRequestData &request, HttpResponseData &re
 
             __JsonToMessage(in, req);
           
+            rsp = req;
             rc = pEntry[i].cpft(req, rsp);
 
             if (rc == HC_OK){
@@ -58,9 +61,9 @@ int CommandHandler::HandleRequest(HttpRequestData &request, HttpResponseData &re
                         response.set_success(HC_NO_CONTENT);
                         return rc ;
                     }
-                    response.set_success("Application/json", out_doc, rc);
+                    response.set_success("application/json", out_doc, HC_OK);
                 }else{
-                    response.set_success(rc);
+                    response.set_success(HC_BAD_REQUEST);
                 }
             }else{
                  response.set_error(rc);
@@ -82,7 +85,7 @@ int CommandHandler::CMD_PeerLeaveRoom(const Message &req, Message &rsp)
 
 int CommandHandler::CMD_PeerAddPublisher(const Message &req, Message &rsp)
 {
-    return 0;
+    return RoomMgr::Instance()->AddPublisher(req, rsp);
 }
 int CommandHandler::CMD_PeerRemovePublisher(const Message &req, Message &rsp)
 {
@@ -92,10 +95,22 @@ int CommandHandler::CMD_PeerAddSubscriber(const Message &req, Message &rsp)
 {
     return 0;
 }
+
+int CommandHandler::CMD_PeerSetRemoteSDP(const Message &req, Message &rsp)
+{
+    return RoomMgr::Instance()->SetRemoteSdp(req, rsp);
+}
+
 int CommandHandler::CMD_PeerRemoveSubscriber(const Message &req, Message &rsp)
 {
     return 0;
 }
+
+int CommandHandler::CMD_PeerGetCandidate(const Message &req, Message &rsp)
+{
+    return RoomMgr::Instance()->GetCandidate(req, rsp);
+}
+
 int CommandHandler::__GetBody(rtc::StreamInterface *document, std::string &body)
 {
     char buffer[1024];
@@ -164,11 +179,11 @@ int CommandHandler::__JsonToMessage(const Json::Value &req, Message &m)
 
     m.peer_id(pid);
 
-    if (req["msg"].isNull()){
+    if (req["data"].isNull()){
         RTC_LOG(LS_WARNING) << "Peer join room message no data.";
     }
 
-    m.data_value(req["msg"]);
+    m.data_value(req["data"]);
 
     return SBS_SUCCESS;
 }
@@ -178,7 +193,7 @@ int CommandHandler::__MessageToJson(const Message &m, Json::Value &rsp)
     rsp["cmd"] = m.cmd_type();
     rsp["roomid"] = m.room_id();
     rsp["peerid"] = m.peer_id();
-    rsp["msg"] = m.data_value();
+    rsp["data"] = m.data_value();
 
     return SBS_SUCCESS;
 }

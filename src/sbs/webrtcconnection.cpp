@@ -82,6 +82,11 @@ int WebRtcConnection::Initialize()
     return 0;
 }
 
+int WebRtcConnection::CreateLocalSdp(const std::string &hint, std::string &lsdp)
+{
+    
+}
+
 int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
 {
     // Save the sdp
@@ -108,7 +113,6 @@ int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
     peer_connection_->SetRemoteDescription(
             WebRtcConnection::DummySetSessionDescriptionObserver::Create(this, answer_promise),
             desc.release());
-
     answer_future.get();
     return SBS_SUCCESS;
 }
@@ -153,12 +157,19 @@ void WebRtcConnection::OnIceCandidate(const webrtc::IceCandidateInterface* candi
 {
     std::string sdp_candidate;
 
+    if (candidate->candidate().protocol().compare("tcp") ==0)
+        return;
+
     candidate->ToString(&sdp_candidate);
 
     RTC_LOG(LS_INFO) << "OnIceCandidate sdpMid=" << candidate->sdp_mid() 
         << " sdp_mindex=" << candidate->sdp_mline_index()
         << " server_url=" << candidate->server_url()
         << " candidate_sdp=" << sdp_candidate; 
+
+    candidate_["candidate"] = sdp_candidate;
+    candidate_["sdpMid"] = candidate->sdp_mid();
+    candidate_["sdpMLineIndex"] = candidate->sdp_mline_index();
 }
 void WebRtcConnection::OnIceConnectionReceivingChange(bool receiving)
 {

@@ -7,8 +7,8 @@ file(GLOB sbs_srcs *.h *.cpp *.cc)
 source_group(source FILES ${sbs_srcs})
 
 
-link_directories(../third_party/boringssl/build/ssl)
-link_directories(../third_party/boringssl/build/crypto)
+link_directories(../third_party/boringssl/src/build/ssl)
+link_directories(../third_party/boringssl/src/build/crypto)
 link_directories(../third_party/libsrtp/)
 link_directories(../third_party/libjpeg/build)
 link_directories(../third_party/libyuv/build)

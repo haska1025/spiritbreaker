@@ -29,6 +29,8 @@ public:
     int ReomvePublisher(const Message &request, Message &response);
 
     int SetRemoteSdp(const Message &request, Message &response);
+    int GetCandidate(const Message &request, Message &response);
+    int Subscribe(const Message &request, Message &response);
 
     rtc::scoped_refptr<webrtc::PeerConnectionFactoryInterface> pc_factory(){return peer_connection_factory_;}
 private:

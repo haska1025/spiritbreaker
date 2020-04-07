@@ -7,8 +7,8 @@ file(GLOB ut_srcs *.cpp *.h)
 source_group(source FILES ${ut_srcs})
 
 
-link_directories(../../src/third_party/boringssl/build/ssl)
-link_directories(../../src/third_party/boringssl/build/crypto)
+link_directories(../../src/third_party/boringssl/src/build/ssl)
+link_directories(../../src/third_party/boringssl/src/build/crypto)
 link_directories(../../src/third_party/libsrtp/)
 link_directories(../../src/third_party/libjpeg/build)
 link_directories(../../src/third_party/libyuv/build)

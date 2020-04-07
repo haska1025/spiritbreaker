@@ -47,6 +47,8 @@ private:
     static int CMD_PeerRemovePublisher(const Message &req, Message &rsp);
     static int CMD_PeerAddSubscriber(const Message &req, Message &rsp);
     static int CMD_PeerRemoveSubscriber(const Message &req, Message &rsp);
+    static int CMD_PeerSetRemoteSDP(const Message &req, Message &rsp);
+    static int CMD_PeerGetCandidate(const Message &req, Message &rsp);
 
     static int __GetBody(rtc::StreamInterface *document, std::string &body);
     static int __SetBody(rtc::StreamInterface *document, const std::string &body);

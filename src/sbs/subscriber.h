@@ -16,6 +16,11 @@ public:
 
     uint32_t peer_id();
     uint32_t pub_id();
+
+
+    int Initialize();
+    int Subscribe();
+
 private:
     std::shared_ptr<Peer> peer_;
     std::shared_ptr<Publisher> publisher_;

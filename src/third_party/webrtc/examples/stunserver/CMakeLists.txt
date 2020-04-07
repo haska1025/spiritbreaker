@@ -2,8 +2,8 @@ message("Build stun server...")
 
 file(GLOB stun_server_src *.cc *.h)
 
-link_directories(../../../boringssl/build/ssl)
-link_directories(../../../boringssl/build/crypto)
+link_directories(../../../boringssl/src/build/ssl)
+link_directories(../../../boringssl/src/build/crypto)
 
 source_group(source FILES ${stun_server_src})
 add_executable(stunserver ${stun_server_src})

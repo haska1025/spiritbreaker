@@ -3,11 +3,15 @@
 
 Publisher::Publisher(uint32_t id, std::shared_ptr<Peer> peer):id_(id), peer_{peer}
 {
-    webrtc_conn_ = new rtc::RefCountedObject<WebRtcConnection>();
-    webrtc_conn_->Initialize();
 }
 Publisher::~Publisher()
 {
+}
+
+int Publisher::Initialize()
+{
+    webrtc_conn_ = new rtc::RefCountedObject<WebRtcConnection>();
+    return webrtc_conn_->Initialize();
 }
 
 bool Publisher::AddSubscriber(std::shared_ptr<Subscriber> s)
@@ -46,11 +50,12 @@ std::shared_ptr<Subscriber> Publisher::GetSubscriber(uint32_t peerid)
     return std::shared_ptr<Subscriber>(nullptr);
 }
 
-int Publisher::SetRemoteSdp(const std::string &sdp, std::string &lsdp)
+int Publisher::SetRemoteSdp(const std::string &sdp, Json::Value &value)
 {
     webrtc_conn_->SetRemoteSdp(sdp);
-    lsdp = webrtc_conn_->GetLocalSdp();
-
+    std::string lsdp = webrtc_conn_->GetLocalSdp();
+    value["sdp"] = lsdp;
+    value["type"] = webrtc::SdpTypeToString(webrtc_conn_->local_sdp_type());
     return 0;
 }
 

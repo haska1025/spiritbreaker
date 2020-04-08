@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 {
     int rc = 0;
 
-    rtc::LogMessage::AddLogToStream(new ConsoleLogSink(), rtc::LS_VERBOSE);
+    rtc::LogMessage::AddLogToStream(new ConsoleLogSink(), rtc::LS_INFO);
     RTC_LOG(LS_ERROR) << "Start spirit breaker....";
 /*
     rc = Configuration::Initialize();

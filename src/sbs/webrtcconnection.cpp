@@ -1,6 +1,7 @@
 #include "webrtcconnection.h"
 #include "room_mgr.h"
 #include "sbs_error.h"
+#include "fake_video_track_source.h"
 
 #include <pc/webrtc_sdp.h>
 #include <api/jsep_session_description.h>
@@ -18,6 +19,7 @@ void WebRtcConnection::DummyCreateSessionDescriptionObserver::OnSuccess(webrtc::
     std::string sdp;
     desc->ToString(&sdp);
     conn_->SetLocalSdp(sdp);
+    conn_->local_sdp_type(desc->GetType());
 
     // Just has answer
     conn_->peer_conn()->SetLocalDescription(WebRtcConnection::DummySetSessionDescriptionObserver::Create(conn_, result_promise_),
@@ -43,9 +45,11 @@ void WebRtcConnection::DummySetSessionDescriptionObserver::OnSuccess()
     if (!sdp.empty()){
         result_promise_->set_value(sdp);
     }else{
-        // The callback signaled by the SetRemoteDescription
-        conn_->peer_conn()->CreateAnswer(WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(conn_, result_promise_),
-                webrtc::PeerConnectionInterface::RTCOfferAnswerOptions());
+        if (conn_->remote_sdp_type() == webrtc::SdpType::kOffer){
+            // The callback signaled by the SetRemoteDescription
+            conn_->peer_conn()->CreateAnswer(WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(conn_, result_promise_),
+                    webrtc::PeerConnectionInterface::RTCOfferAnswerOptions());
+        }
     }
 
 }
@@ -53,8 +57,6 @@ void WebRtcConnection::DummySetSessionDescriptionObserver::OnFailure(webrtc::RTC
 {
     RTC_LOG(LS_INFO) << "Failed";
 }
-
-
 
 WebRtcConnection::WebRtcConnection()
 {
@@ -79,12 +81,42 @@ int WebRtcConnection::Initialize()
         return -1;
     }
 
+    rtc::scoped_refptr<webrtc::AudioTrackInterface> audio_track(
+            RoomMgr::Instance()->pc_factory()->CreateAudioTrack(
+                "audio_label", RoomMgr::Instance()->pc_factory()->CreateAudioSource(
+                    cricket::AudioOptions())));
+    auto result_or_error = peer_connection_->AddTrack(audio_track, {"stream_id"});
+    if (!result_or_error.ok()) {
+        RTC_LOG(LS_ERROR) << "Failed to add audio track to PeerConnection: "
+            << result_or_error.error().message();
+    }
+
+    rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(
+            RoomMgr::Instance()->pc_factory()->CreateVideoTrack("video_label", webrtc::FakeVideoTrackSource::Create()));
+
+    result_or_error = peer_connection_->AddTrack(video_track_, {"stream_id"});
+    if (!result_or_error.ok()) {
+        RTC_LOG(LS_ERROR) << "Failed to add video track to PeerConnection: "
+            << result_or_error.error().message();
+    }   
+
     return 0;
 }
 
-int WebRtcConnection::CreateLocalSdp(const std::string &hint, std::string &lsdp)
+int WebRtcConnection::CreateLocalSdp()
 {
-    
+    webrtc::PeerConnectionInterface::RTCOfferAnswerOptions option;
+    option.offer_to_receive_audio = 0;
+    option.offer_to_receive_video = 0;
+
+    std::shared_ptr<std::promise<std::string>> answer_promise = std::make_shared<std::promise<std::string>>();
+    std::future<std::string> answer_future = answer_promise->get_future();
+
+    peer_connection_->CreateOffer(WebRtcConnection::DummyCreateSessionDescriptionObserver::Create(this, answer_promise), option);
+
+    answer_future.get();
+
+    return SBS_SUCCESS;
 }
 
 int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
@@ -101,6 +133,7 @@ int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
         return SBS_GENERAL_ERROR;
     }
 
+    remote_sdp_type_ = desc->GetType();
     std::string tmpsdp;
     desc->ToString(&tmpsdp);
 

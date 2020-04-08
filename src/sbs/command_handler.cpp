@@ -93,7 +93,7 @@ int CommandHandler::CMD_PeerRemovePublisher(const Message &req, Message &rsp)
 }
 int CommandHandler::CMD_PeerAddSubscriber(const Message &req, Message &rsp)
 {
-    return 0;
+    return RoomMgr::Instance()->Subscribe(req, rsp);
 }
 
 int CommandHandler::CMD_PeerSetRemoteSDP(const Message &req, Message &rsp)

@@ -35,7 +35,7 @@ public:
              int64_t render_time_ms)
      {
 
-         RTC_LOG(LS_ERROR) << "Decoder recv buffer=" << input_image.data() << " size=" << input_image.size() << "timestamp=" << input_image.Timestamp();
+//         RTC_LOG(LS_ERROR) << "Decoder recv buffer=" << input_image.data() << " size=" << input_image.size() << "timestamp=" << input_image.Timestamp();
          return 0;
      }
 
@@ -154,6 +154,8 @@ int RoomMgr::AddPublisher(const Message &request, Message &response)
         return SBS_GENERAL_ERROR;
     }
 
+    publisher->Initialize();
+
     peer->AddPublisher(publisher);
 
     return HC_OK;
@@ -196,12 +198,8 @@ int RoomMgr::SetRemoteSdp(const Message &request, Message &response)
         return SBS_ERROR_INVALID_PARAM;
     }
  
-    std::string localsdp;
-
-    publisher->SetRemoteSdp(sdp, localsdp);
-
     Json::Value lsdp;
-    lsdp["sdp"] = localsdp;
+    publisher->SetRemoteSdp(sdp, lsdp);
     
     response.data_value(lsdp);
 
@@ -288,9 +286,15 @@ int RoomMgr::Subscribe(const Message &request, Message &response)
     }
 
     sub = std::make_shared<Subscriber>(peer, publisher);
+    sub->Initialize();
+
     peer->AddSubscriber(sub);
     publisher->AddSubscriber(sub);
 
+    Json::Value lsdp;
+    sub->Subscribe(lsdp);
+
+    response.data_value(lsdp);
 
     return HC_OK;
 }

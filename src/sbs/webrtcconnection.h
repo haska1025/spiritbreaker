@@ -21,7 +21,7 @@ public:
 
     int Initialize();
 
-    int CreateLocalSdp(const std::string &hint, std::string &lsdp);
+    int CreateLocalSdp();
     int SetRemoteSdp(const std::string &sdp);
     int SetLocalSdp(const std::string &sdp);
 
@@ -30,6 +30,11 @@ public:
 
     Json::Value GetCandidate(){return candidate_;}
 
+    webrtc::SdpType remote_sdp_type(){return remote_sdp_type_;}
+    void remote_sdp_type(webrtc::SdpType st){remote_sdp_type_ = st;}
+
+    webrtc::SdpType local_sdp_type(){return local_sdp_type_;}
+    void local_sdp_type(webrtc::SdpType st){local_sdp_type_ = st;}
     //
     // PeerConnectionObserver implementation.
     //
@@ -88,8 +93,10 @@ private:
 
     // The answer sdp
     std::string local_sdp_;
+    webrtc::SdpType local_sdp_type_ {webrtc::SdpType::kOffer};
     // The remote sdp
     std::string remote_sdp_;
+    webrtc::SdpType remote_sdp_type_ {webrtc::SdpType::kOffer};
 
     Json::Value candidate_;
 };

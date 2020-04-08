@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <memory>
 #include <mutex>
+#include <json/json.h>
 
 #include "webrtcconnection.h"
 
@@ -17,11 +18,12 @@ public:
     Publisher(uint32_t id, std::shared_ptr<Peer> peer);
     ~Publisher();
 
+    int Initialize();
     bool AddSubscriber(std::shared_ptr<Subscriber> s);
     bool RemoveSubscriber(uint32_t peerid);
     std::shared_ptr<Subscriber> GetSubscriber(uint32_t peerid);
 
-    int SetRemoteSdp(const std::string &sdp, std::string &lsdp);
+    int SetRemoteSdp(const std::string &sdp, Json::Value &value);
 
     uint32_t id(){return id_;}
     Json::Value GetCandidate(){return webrtc_conn_->GetCandidate();}

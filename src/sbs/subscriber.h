@@ -23,6 +23,7 @@ public:
 
     int Initialize();
     int Subscribe(Json::Value &value);
+    int SetRemoteSdp(const std::string &sdp, const std::string &type);
 
 private:
     std::shared_ptr<Peer> peer_;

@@ -1,5 +1,6 @@
 #include "publisher.h"
 #include "subscriber.h"
+#include <string>
 
 Publisher::Publisher(uint32_t id, std::shared_ptr<Peer> peer):id_(id), peer_{peer}
 {
@@ -50,12 +51,13 @@ std::shared_ptr<Subscriber> Publisher::GetSubscriber(uint32_t peerid)
     return std::shared_ptr<Subscriber>(nullptr);
 }
 
-int Publisher::SetRemoteSdp(const std::string &sdp, Json::Value &value)
+int Publisher::SetRemoteSdp(const std::string &sdp, const std::string &type, Json::Value &value)
 {
-    webrtc_conn_->SetRemoteSdp(sdp);
-    std::string lsdp = webrtc_conn_->GetLocalSdp();
+    webrtc_conn_->SetRemoteSdp(sdp, type);
+    std::string lsdp, ltype;
+    webrtc_conn_->GetLocalSdp(lsdp, ltype);
     value["sdp"] = lsdp;
-    value["type"] = webrtc::SdpTypeToString(webrtc_conn_->local_sdp_type());
+    value["type"] = ltype;
     return 0;
 }
 

@@ -19,15 +19,14 @@ public:
     WebRtcConnection();
     ~WebRtcConnection();
 
-    int Initialize();
+    int Initialize(bool share = false);
 
     int CreateLocalSdp();
-    int SetRemoteSdp(const std::string &sdp);
+    int SetRemoteSdp(const std::string &sdp, const std::string &type);
     int SetLocalSdp(const std::string &sdp);
+    void GetLocalSdp(std::string &sdp, std::string &type);
 
-    std::string GetLocalSdp(){return local_sdp_;}
     std::string GetRemoteSdp(){return remote_sdp_;}
-
     Json::Value GetCandidate(){return candidate_;}
 
     webrtc::SdpType remote_sdp_type(){return remote_sdp_type_;}

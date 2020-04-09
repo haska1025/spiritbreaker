@@ -41,8 +41,9 @@ public:
         std::cout << offer << std::endl;
 
         CPPUNIT_ASSERT(0==conn->Initialize());
-        CPPUNIT_ASSERT(0==conn->SetRemoteSdp(offer));
-        std::string sdp = conn->GetLocalSdp();
+        CPPUNIT_ASSERT(0==conn->SetRemoteSdp(offer, "offer"));
+        std::string sdp, type;
+        conn->GetLocalSdp(sdp, type);
         CPPUNIT_ASSERT(!sdp.empty());
 
         std::this_thread::sleep_for(std::chrono::seconds(10));

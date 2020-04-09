@@ -23,7 +23,7 @@ public:
     bool RemoveSubscriber(uint32_t peerid);
     std::shared_ptr<Subscriber> GetSubscriber(uint32_t peerid);
 
-    int SetRemoteSdp(const std::string &sdp, Json::Value &value);
+    int SetRemoteSdp(const std::string &sdp, const std::string &type, Json::Value &value);
 
     uint32_t id(){return id_;}
     Json::Value GetCandidate(){return webrtc_conn_->GetCandidate();}

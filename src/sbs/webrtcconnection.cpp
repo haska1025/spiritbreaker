@@ -41,7 +41,8 @@ void WebRtcConnection::DummySetSessionDescriptionObserver::OnSuccess()
 {
     RTC_LOG(LS_INFO) << "Success";
 
-    std::string sdp = conn_->GetLocalSdp();
+    std::string sdp, type;
+    conn_->GetLocalSdp(sdp, type);
     if (!sdp.empty()){
         result_promise_->set_value(sdp);
     }else{
@@ -55,7 +56,7 @@ void WebRtcConnection::DummySetSessionDescriptionObserver::OnSuccess()
 }
 void WebRtcConnection::DummySetSessionDescriptionObserver::OnFailure(webrtc::RTCError error)
 {
-    RTC_LOG(LS_INFO) << "Failed";
+    RTC_LOG(LS_ERROR) << "Failed";
 }
 
 WebRtcConnection::WebRtcConnection()
@@ -65,7 +66,7 @@ WebRtcConnection::~WebRtcConnection()
 {
 }
 
-int WebRtcConnection::Initialize()
+int WebRtcConnection::Initialize(bool share)
 {
     webrtc::PeerConnectionInterface::RTCConfiguration config;
     config.sdp_semantics = webrtc::SdpSemantics::kUnifiedPlan;
@@ -81,24 +82,26 @@ int WebRtcConnection::Initialize()
         return -1;
     }
 
-    rtc::scoped_refptr<webrtc::AudioTrackInterface> audio_track(
-            RoomMgr::Instance()->pc_factory()->CreateAudioTrack(
-                "audio_label", RoomMgr::Instance()->pc_factory()->CreateAudioSource(
-                    cricket::AudioOptions())));
-    auto result_or_error = peer_connection_->AddTrack(audio_track, {"stream_id"});
-    if (!result_or_error.ok()) {
-        RTC_LOG(LS_ERROR) << "Failed to add audio track to PeerConnection: "
-            << result_or_error.error().message();
+    if (share){
+        rtc::scoped_refptr<webrtc::AudioTrackInterface> audio_track(
+                RoomMgr::Instance()->pc_factory()->CreateAudioTrack(
+                    "audio_label", RoomMgr::Instance()->pc_factory()->CreateAudioSource(
+                        cricket::AudioOptions())));
+        auto result_or_error = peer_connection_->AddTrack(audio_track, {"stream_id"});
+        if (!result_or_error.ok()) {
+            RTC_LOG(LS_ERROR) << "Failed to add audio track to PeerConnection: "
+                << result_or_error.error().message();
+        }
+
+        rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(
+                RoomMgr::Instance()->pc_factory()->CreateVideoTrack("video_label", webrtc::FakeVideoTrackSource::Create()));
+
+        result_or_error = peer_connection_->AddTrack(video_track_, {"stream_id"});
+        if (!result_or_error.ok()) {
+            RTC_LOG(LS_ERROR) << "Failed to add video track to PeerConnection: "
+                << result_or_error.error().message();
+        }
     }
-
-    rtc::scoped_refptr<webrtc::VideoTrackInterface> video_track_(
-            RoomMgr::Instance()->pc_factory()->CreateVideoTrack("video_label", webrtc::FakeVideoTrackSource::Create()));
-
-    result_or_error = peer_connection_->AddTrack(video_track_, {"stream_id"});
-    if (!result_or_error.ok()) {
-        RTC_LOG(LS_ERROR) << "Failed to add video track to PeerConnection: "
-            << result_or_error.error().message();
-    }   
 
     return 0;
 }
@@ -119,15 +122,20 @@ int WebRtcConnection::CreateLocalSdp()
     return SBS_SUCCESS;
 }
 
-int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
+void WebRtcConnection::GetLocalSdp(std::string &sdp, std::string &type)
+{
+    sdp = local_sdp_;
+    type = webrtc::SdpTypeToString(local_sdp_type());
+}
+
+int WebRtcConnection::SetRemoteSdp(const std::string &sdp, const std::string &type)
 {
     // Save the sdp
-    RTC_LOG(LS_INFO) << "The remote sdp=" <<sdp;
     remote_sdp_ = sdp;
 
     // Deserialize the sdp to SessionDescription
     webrtc::SdpParseError error;
-    auto desc = webrtc::CreateSessionDescription(webrtc::SdpType::kOffer, sdp, &error); 
+    auto desc = webrtc::CreateSessionDescription(*webrtc::SdpTypeFromString(type), sdp, &error); 
     if (!desc){
         RTC_LOG(LS_ERROR) << "Set remote sdp create session desc by sdp failed. " << error.description;
         return SBS_GENERAL_ERROR;
@@ -137,7 +145,7 @@ int WebRtcConnection::SetRemoteSdp(const std::string &sdp)
     std::string tmpsdp;
     desc->ToString(&tmpsdp);
 
-    RTC_LOG(LS_INFO) << "After deserialize===" << tmpsdp;
+    RTC_LOG(LS_INFO) << "After deserialize==== remote sdp type: " << type << " sdp:" << tmpsdp;
 
     std::shared_ptr<std::promise<std::string>> answer_promise = std::make_shared<std::promise<std::string>>();
 

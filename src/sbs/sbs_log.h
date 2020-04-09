@@ -9,7 +9,8 @@ SBS_NAMESPACE_DECL_BEGIN
 class ConsoleLogSink : public rtc::LogSink
 {
 public:
-    virtual void OnLogMessage(const std::string& message);
+    virtual void OnLogMessage(const std::string& message) override;
+    virtual void OnLogMessage(const std::string& message, rtc::LoggingSeverity severity) override;
 };
 SBS_NAMESPACE_DECL_END
 #endif//_SBS_LOG_H_

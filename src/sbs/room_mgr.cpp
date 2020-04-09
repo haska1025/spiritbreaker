@@ -6,6 +6,7 @@
 #include "publisher.h"
 #include "subscriber.h"
 #include "configuration.h"
+#include "dummy_video_codec.h"
 
 #include <rtc_base/logging.h>
 #include <api/audio_codecs/audio_decoder_factory.h>
@@ -19,50 +20,6 @@
 #include "api/video_codecs/video_decoder_factory.h"
 #include "api/video_codecs/video_encoder_factory.h"
 #include "api/video_codecs/video_decoder.h"
-
-class DummyVideoDecoder : public webrtc::VideoDecoder
-{
-public:
-     virtual int32_t InitDecode(const webrtc::VideoCodec* codec_settings,
-                                          int32_t number_of_cores)
-     {
-         return 0;
-     }
-
-     virtual int32_t Decode(const webrtc::EncodedImage& input_image,
-             bool missing_frames,
-             const webrtc::CodecSpecificInfo* codec_specific_info,
-             int64_t render_time_ms)
-     {
-
-//         RTC_LOG(LS_ERROR) << "Decoder recv buffer=" << input_image.data() << " size=" << input_image.size() << "timestamp=" << input_image.Timestamp();
-         return 0;
-     }
-
-     virtual int32_t RegisterDecodeCompleteCallback( webrtc::DecodedImageCallback* callback)
-     {
-         return 0;
-     }
-
-     virtual int32_t Release()
-     {
-         return 0;
-     }
-};
-
-class DummyVideoDecoderFactory : public webrtc::VideoDecoderFactory
-{
-public:
-    virtual std::vector<webrtc::SdpVideoFormat> GetSupportedFormats() const
-    {
-        return std::vector<webrtc::SdpVideoFormat>();
-    }
-
-    std::unique_ptr<webrtc::VideoDecoder> CreateVideoDecoder( const webrtc::SdpVideoFormat& format)
-    {
-        return std::unique_ptr<webrtc::VideoDecoder>(new DummyVideoDecoder());
-    }
-};
 
 RoomMgr::RoomMgr()
 {
@@ -86,7 +43,8 @@ int RoomMgr::Initialize()
             nullptr /* default_adm */,
             webrtc::CreateBuiltinAudioEncoderFactory(),
             webrtc::CreateBuiltinAudioDecoderFactory(),
-            webrtc::CreateBuiltinVideoEncoderFactory(),
+            std::unique_ptr<webrtc::VideoEncoderFactory>(new DummyVideoEncoderFactory()),
+            //webrtc::CreateBuiltinVideoEncoderFactory(),
             //webrtc::CreateBuiltinVideoDecoderFactory(),
             std::move(video_decoder_factory),
             nullptr /* audio_mixer */,
@@ -180,27 +138,44 @@ int RoomMgr::SetRemoteSdp(const Message &request, Message &response)
     }
 
     Json::Value data = request.data_value();
+
+    std::string type;
+    if (data["type"].isNull() || !rtc::GetStringFromJson(data["type"], &type)){
+        RTC_LOG(LS_ERROR) << "Set remote sdp. invalid type";
+        return SBS_ERROR_INVALID_PARAM;
+    }
+ 
+    std::string sdp;
+    if (data["sdp"].isNull() || !rtc::GetStringFromJson(data["sdp"], &sdp)){
+        RTC_LOG(LS_ERROR) << "Set remote sdp. invalid sdp";
+        return SBS_ERROR_INVALID_PARAM;
+    }
+
     uint32_t pubid = 0;
     if (data["pubid"].isNull() || !rtc::GetUIntFromJson(data["pubid"], &pubid)){
         RTC_LOG(LS_ERROR) << "Set remote sdp. invalid pubid";
         return SBS_ERROR_INVALID_PARAM;
     }
 
-    auto publisher = peer->GetPublisher(pubid); 
-    if (!publisher){
-        RTC_LOG(LS_ERROR) << "Set remote sdp. the publisher isn't exist. roomid=" << request.peer_id() << " pubid=" << pubid;
-        return SBS_ERROR_INVALID_PARAM;
+    Json::Value lsdp;
+    if (type.compare("offer") == 0){
+        auto publisher = peer->GetPublisher(pubid); 
+        if (!publisher){
+            RTC_LOG(LS_ERROR) << "Set remote sdp. the publisher isn't exist. roomid=" << request.peer_id() << " pubid=" << pubid;
+            return SBS_ERROR_INVALID_PARAM;
+        }
+        publisher->SetRemoteSdp(sdp,type, lsdp);
+    }else if(type.compare("answer") == 0){
+        auto sub = peer->GetSubscriber(pubid);
+        if (!sub){
+            RTC_LOG(LS_ERROR) << "Set remote sdp. the subscriber isn't exist. roomid=" << request.peer_id() << " pubid=" << pubid;
+            return SBS_ERROR_INVALID_PARAM;
+        }
+        sub->SetRemoteSdp(sdp, type);
     }
 
-    std::string sdp;
-    if (data["sdp"].isNull() || !rtc::GetStringFromJson(data["sdp"], &sdp)){
-        RTC_LOG(LS_ERROR) << "Peer join room invalid cmd";
-        return SBS_ERROR_INVALID_PARAM;
-    }
- 
-    Json::Value lsdp;
-    publisher->SetRemoteSdp(sdp, lsdp);
-    
+    lsdp["pubid"] = pubid;
+
     response.data_value(lsdp);
 
     return HC_OK;

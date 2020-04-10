@@ -21,6 +21,9 @@
 #include "api/video_codecs/video_encoder_factory.h"
 #include "api/video_codecs/video_decoder.h"
 
+
+Publisher *pub = nullptr;
+
 RoomMgr::RoomMgr()
 {
 }
@@ -112,6 +115,10 @@ int RoomMgr::AddPublisher(const Message &request, Message &response)
         return SBS_GENERAL_ERROR;
     }
 
+    if (!pub){
+        pub = publisher.get();
+    }
+
     publisher->Initialize();
 
     peer->AddPublisher(publisher);
@@ -201,14 +208,34 @@ int RoomMgr::GetCandidate(const Message &request, Message &response)
         return SBS_ERROR_INVALID_PARAM;
     }
 
-    auto publisher = peer->GetPublisher(pubid); 
-    if (!publisher){
-        RTC_LOG(LS_ERROR) << "Get candidate. the publisher isn't exist. roomid=" << request.peer_id() << " pubid=" << pubid;
+    std::string type;
+    if (data["type"].isNull() || !rtc::GetStringFromJson(data["type"], &type)){
+        RTC_LOG(LS_ERROR) << "Get candidate. invalid type";
         return SBS_ERROR_INVALID_PARAM;
     }
 
-    Json::Value can = publisher->GetCandidate();
+    Json::Value can;
+
+    if (type.compare("pub") == 0){
+        auto publisher = peer->GetPublisher(pubid); 
+        if (!publisher){
+            RTC_LOG(LS_ERROR) << "Get candidate. the publisher isn't exist. roomid=" << request.peer_id() << " pubid=" << pubid;
+            return SBS_ERROR_INVALID_PARAM;
+        }
+
+        can = publisher->GetCandidate();
+    }else{
+        auto sub = peer->GetSubscriber(pubid);
+        if (!sub){
+            RTC_LOG(LS_ERROR) << "Get candidate. the sub isn't exist. roomid=" << request.peer_id() << " pubid=" << pubid;
+            return SBS_ERROR_INVALID_PARAM;
+        }
+
+        can = sub->GetCandidate();
+    }
+
     if (!can["candidate"].isNull()){
+        can["pubid"] = pubid;
         response.data_value(can);
     }
 

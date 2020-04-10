@@ -4,9 +4,11 @@
 
 Publisher::Publisher(uint32_t id, std::shared_ptr<Peer> peer):id_(id), peer_{peer}
 {
+    RTC_LOG(LS_INFO) << "Create Publisher id=" << id_;
 }
 Publisher::~Publisher()
 {
+    RTC_LOG(LS_INFO) << "Destroy Publisher id=" << id_;
 }
 
 int Publisher::Initialize()
@@ -58,6 +60,16 @@ int Publisher::SetRemoteSdp(const std::string &sdp, const std::string &type, Jso
     webrtc_conn_->GetLocalSdp(lsdp, ltype);
     value["sdp"] = lsdp;
     value["type"] = ltype;
+    return 0;
+}
+
+int Publisher::OnRecvData(video_decoder_data *data)
+{
+    RTC_LOG(LS_INFO) << "OnRecvData subscribers.size=" << subscribers_.size(); 
+    for (auto it = subscribers_.begin(); it != subscribers_.end(); ++it){
+        it->second->PushData(data);
+    }
+
     return 0;
 }
 

@@ -1,6 +1,9 @@
 #include "dummy_video_codec.h"
+#include "publisher.h"
 
 static const char kFakeCodecFactoryCodecName[] = "FakeCodec";
+DummyVideoEncoder *gEncoder = NULL;
+extern Publisher *pub;
 
 int32_t DummyVideoDecoder::InitDecode(const webrtc::VideoCodec* codec_settings,
         int32_t number_of_cores)
@@ -14,7 +17,19 @@ int32_t DummyVideoDecoder::Decode(const webrtc::EncodedImage& input_image,
         int64_t render_time_ms)
 {
 
-    //         RTC_LOG(LS_ERROR) << "Decoder recv buffer=" << input_image.data() << " size=" << input_image.size() << "timestamp=" << input_image.Timestamp();
+    RTC_LOG(LS_ERROR) << "Decoder recv buffer=" << input_image.data() << " size=" << input_image.size() << "timestamp=" << input_image.Timestamp();
+    video_decoder_data *data = new video_decoder_data;
+
+    data->input_image = input_image;
+
+    uint8_t *buffer = (uint8_t*)malloc(input_image.capacity());
+    memcpy(buffer, input_image.data(), input_image.capacity()); 
+    data->input_image.set_buffer(buffer, input_image.capacity());
+    data->input_image.timing_.encode_start_ms = input_image.timing_.encode_start_ms;
+    data->input_image.timing_.encode_finish_ms = input_image.timing_.encode_finish_ms;
+    data->codec_specific_info = *codec_specific_info;
+
+    pub->OnRecvData(data);
     return 0;
 }
 
@@ -52,6 +67,7 @@ int32_t DummyVideoEncoder::Encode(const webrtc::VideoFrame& input_image,
 }
 int32_t DummyVideoEncoder::RegisterEncodeCompleteCallback( webrtc::EncodedImageCallback* callback) 
 {
+    callback_ = callback;
     return 0;
 }
 int32_t DummyVideoEncoder::Release() 
@@ -62,7 +78,12 @@ int32_t DummyVideoEncoder::SetRates(uint32_t bitrate, uint32_t framerate)
 {
     return 0;
 }
-
+void DummyVideoEncoder::SendData(const webrtc::EncodedImage& encoded_image,
+                    const webrtc::CodecSpecificInfo* codec_specific_info)
+{
+    RTC_LOG(LS_INFO) << "Send data............";
+    callback_->OnEncodedImage(encoded_image, codec_specific_info, nullptr);
+}
 
 std::vector<webrtc::SdpVideoFormat> DummyVideoEncoderFactory::GetSupportedFormats() const 
 {
@@ -80,6 +101,9 @@ webrtc::VideoEncoderFactory::CodecInfo DummyVideoEncoderFactory::QueryVideoEncod
 }
 std::unique_ptr<webrtc::VideoEncoder> DummyVideoEncoderFactory::CreateVideoEncoder( const webrtc::SdpVideoFormat& format) 
 {
-    return std::unique_ptr<webrtc::VideoEncoder>(new DummyVideoEncoder());
+    RTC_LOG(LS_INFO) << "Create Encoder";
+
+    gEncoder = new DummyVideoEncoder();
+    return std::unique_ptr<webrtc::VideoEncoder>(gEncoder);
 }
 

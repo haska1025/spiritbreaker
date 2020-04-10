@@ -1,13 +1,19 @@
 #include "subscriber.h"
 #include "publisher.h"
+#include "dummy_video_codec.h"
 #include "peer.h"
+
+extern rtc::Thread *pthrMain; 
+extern DummyVideoEncoder *gEncoder;
 
 Subscriber::Subscriber(std::shared_ptr<Peer> peer, std::shared_ptr<Publisher> pub)
     :peer_{peer}, publisher_{pub}
 {
+    RTC_LOG(LS_INFO) << "Create Subscriber peerid=" << peer->id() << " pubid=" << pub->id();
 }
 Subscriber::~Subscriber()
 {
+    RTC_LOG(LS_INFO) << "Subscriber peerid=" << peer_->id() << " pubid=" << publisher_->id();
 }
 
 int Subscriber::Initialize()
@@ -41,5 +47,32 @@ uint32_t Subscriber::peer_id()
 uint32_t Subscriber::pub_id()
 {
     publisher_->id();
+}
+
+int Subscriber::PushData(video_decoder_data *data)
+{
+    std::lock_guard<std::mutex> lg(data_queue_mutex_);
+    video_datas_.push_back(data);
+
+    pthrMain->Post(RTC_FROM_HERE, this);
+    return 0;
+}
+
+void Subscriber::OnMessage(rtc::Message* msg)
+{
+    std::lock_guard<std::mutex> lg(data_queue_mutex_);
+    if (gEncoder){
+        while (!video_datas_.empty()){
+            auto data = video_datas_.front();
+            video_datas_.pop_front();
+            gEncoder->SendData(data->input_image, &data->codec_specific_info);
+            delete data;
+            data = nullptr;
+        }
+      //  for(auto it = video_datas_.begin(); it != video_datas_.end(); ){
+    //        delete (*it);
+        //    video_datas_.erase(it++); 
+       // }
+    }
 }
 

@@ -1,16 +1,17 @@
 #include <rtc_base/logging.h>
 
-
 #include "sbs_log.h"
 #include "sbs_mgr.h"
 #include "room_mgr.h"
 #include "configuration.h"
 
+rtc::Thread *pthrMain = NULL;
+
 int main(int argc, char *argv[])
 {
     int rc = 0;
 
-    rtc::LogMessage::AddLogToStream(new ConsoleLogSink(), rtc::LS_INFO);
+    rtc::LogMessage::AddLogToStream(new ConsoleLogSink(), rtc::LS_VERBOSE);
     RTC_LOG(LS_ERROR) << "Start spirit breaker....";
 /*
     rc = Configuration::Initialize();
@@ -24,7 +25,7 @@ int main(int argc, char *argv[])
         exit(-1);
     }
 
-    rtc::Thread *pthrMain = rtc::Thread::Current();
+    pthrMain = rtc::Thread::Current();
 
     rc = SBSMgr::Instance()->Initialize();
     if (rc != 0){

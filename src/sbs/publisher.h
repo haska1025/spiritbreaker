@@ -8,6 +8,7 @@
 #include <json/json.h>
 
 #include "webrtcconnection.h"
+#include "codec_common.h"
 
 SBS_NAMESPACE_DECL_BEGIN
 class Peer;
@@ -24,6 +25,8 @@ public:
     std::shared_ptr<Subscriber> GetSubscriber(uint32_t peerid);
 
     int SetRemoteSdp(const std::string &sdp, const std::string &type, Json::Value &value);
+
+    int OnRecvData(video_decoder_data *data);
 
     uint32_t id(){return id_;}
     Json::Value GetCandidate(){return webrtc_conn_->GetCandidate();}

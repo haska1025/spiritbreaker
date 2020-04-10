@@ -45,6 +45,10 @@ public:
   //  int32_t SetRateAllocation(const webrtc::VideoBitrateAllocation& rate_allocation, uint32_t framerate) override;
  //   int GetConfiguredInputFramerate() const;
 //    webrtc::EncoderInfo GetEncoderInfo() const override;
+    void SendData(const webrtc::EncodedImage& encoded_image,
+                    const webrtc::CodecSpecificInfo* codec_specific_info);
+    
+    webrtc::EncodedImageCallback *callback_ = {nullptr};
 };
 
 class DummyVideoEncoderFactory : public webrtc::VideoEncoderFactory

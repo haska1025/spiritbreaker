@@ -20,6 +20,7 @@
 #include "api/video_codecs/video_decoder_factory.h"
 #include "api/video_codecs/video_encoder_factory.h"
 #include "api/video_codecs/video_decoder.h"
+#include "modules/audio_device/include/fake_audio_device.h"
 
 
 Publisher *pub = nullptr;
@@ -38,12 +39,14 @@ int RoomMgr::Initialize()
 {
     int rc = SBS_SUCCESS;
 
+    rtc::scoped_refptr<webrtc::AudioDeviceModule> adm(new webrtc::FakeAudioDeviceModule());
+
     std::unique_ptr<webrtc::VideoDecoderFactory> video_decoder_factory(new DummyVideoDecoderFactory());
     peer_connection_factory_ = webrtc::CreatePeerConnectionFactory(
             nullptr /* network_thread */,
             nullptr /* worker_thread */,
             nullptr /* signaling_thread */, 
-            nullptr /* default_adm */,
+            adm/* default_adm */,
             webrtc::CreateBuiltinAudioEncoderFactory(),
             webrtc::CreateBuiltinAudioDecoderFactory(),
             std::unique_ptr<webrtc::VideoEncoderFactory>(new DummyVideoEncoderFactory()),
@@ -234,9 +237,11 @@ int RoomMgr::GetCandidate(const Message &request, Message &response)
         can = sub->GetCandidate();
     }
 
-    if (!can["candidate"].isNull()){
-        can["pubid"] = pubid;
-        response.data_value(can);
+    if (can.size() > 0){
+        Json::Value v;
+        v["pubid"] = pubid;
+        v["candidate"] = can;
+        response.data_value(v);
     }
 
     return HC_OK;

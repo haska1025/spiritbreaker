@@ -1,9 +1,12 @@
 #include "dummy_video_codec.h"
 #include "publisher.h"
+#include <atomic>
 
 static const char kFakeCodecFactoryCodecName[] = "FakeCodec";
 DummyVideoEncoder *gEncoder = NULL;
 extern Publisher *pub;
+
+std::atomic<int> requestKeyFrame{0};
 
 int32_t DummyVideoDecoder::InitDecode(const webrtc::VideoCodec* codec_settings,
         int32_t number_of_cores)
@@ -17,7 +20,7 @@ int32_t DummyVideoDecoder::Decode(const webrtc::EncodedImage& input_image,
         int64_t render_time_ms)
 {
 
-    RTC_LOG(LS_ERROR) << "Decoder recv buffer=" << input_image.data() << " size=" << input_image.size() << "timestamp=" << input_image.Timestamp();
+//    RTC_LOG(LS_ERROR) << "Decoder recv buffer=" << input_image.data() << " size=" << input_image.size() << "timestamp=" << input_image.Timestamp();
     video_decoder_data *data = new video_decoder_data;
 
     data->input_image = input_image;
@@ -43,6 +46,12 @@ int32_t DummyVideoDecoder::Release()
     return 0;
 }
 
+const char* DummyVideoDecoder::ImplementationName() const
+{
+    int isPLI = requestKeyFrame.exchange(0);
+    return isPLI==1?"htalk:requestkeyframe":"htalk";
+}
+
 std::vector<webrtc::SdpVideoFormat> DummyVideoDecoderFactory::GetSupportedFormats() const
 {
     return std::vector<webrtc::SdpVideoFormat>();
@@ -63,6 +72,15 @@ int32_t DummyVideoEncoder::Encode(const webrtc::VideoFrame& input_image,
         const webrtc::CodecSpecificInfo* codec_specific_info,
         const std::vector<webrtc::FrameType>* frame_types) 
 {
+    if (frame_types){
+        for (auto it = frame_types->begin(); it != frame_types->end(); ++it){
+            if (*it == webrtc::FrameType::kVideoFrameKey){
+                RTC_LOG(LS_INFO) << "Encode frame type:" << (*it);
+                requestKeyFrame.store(1);
+                break;
+            }
+        }
+    }
     return 0;
 }
 int32_t DummyVideoEncoder::RegisterEncodeCompleteCallback( webrtc::EncodedImageCallback* callback) 
@@ -81,7 +99,7 @@ int32_t DummyVideoEncoder::SetRates(uint32_t bitrate, uint32_t framerate)
 void DummyVideoEncoder::SendData(const webrtc::EncodedImage& encoded_image,
                     const webrtc::CodecSpecificInfo* codec_specific_info)
 {
-    RTC_LOG(LS_INFO) << "Send data............";
+    //RTC_LOG(LS_INFO) << "Send data............";
     callback_->OnEncodedImage(encoded_image, codec_specific_info, nullptr);
 }
 

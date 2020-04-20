@@ -18,6 +18,6 @@ void ConsoleLogSink::OnLogMessage(const std::string& message, rtc::LoggingSeveri
     else if (severity == rtc::LS_ERROR)
         level = 3;
 
-    syslog(LOG_LOCAL3|level, "%s:%d:(%s): %s" , __FILE__,__LINE__,__FUNCTION__, message.c_str());
+    syslog(LOG_LOCAL3|level, "%s" , message.c_str());
 }
 

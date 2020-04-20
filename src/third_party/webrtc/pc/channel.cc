@@ -326,6 +326,10 @@ bool BaseChannel::IsReadyToSendMedia_w() const {
 bool BaseChannel::IsReadyToSendMedia_n() const {
   // Send outgoing data if we are enabled, have local and remote content,
   // and we have had some form of connectivity.
+  RTC_LOG(LS_INFO) << "enabled=" << enabled() << " remote_has_recv=" << webrtc::RtpTransceiverDirectionHasRecv(remote_content_direction_)
+      << " local_has_send=" << webrtc::RtpTransceiverDirectionHasSend(local_content_direction_)
+      << " was_ever_writable=" << was_ever_writable();
+
   return enabled() &&
          webrtc::RtpTransceiverDirectionHasRecv(remote_content_direction_) &&
          webrtc::RtpTransceiverDirectionHasSend(local_content_direction_) &&

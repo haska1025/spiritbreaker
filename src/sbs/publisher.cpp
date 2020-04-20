@@ -65,7 +65,7 @@ int Publisher::SetRemoteSdp(const std::string &sdp, const std::string &type, Jso
 
 int Publisher::OnRecvData(video_decoder_data *data)
 {
-    RTC_LOG(LS_INFO) << "OnRecvData subscribers.size=" << subscribers_.size(); 
+//    RTC_LOG(LS_INFO) << "OnRecvData subscribers.size=" << subscribers_.size(); 
     for (auto it = subscribers_.begin(); it != subscribers_.end(); ++it){
         it->second->PushData(data);
     }

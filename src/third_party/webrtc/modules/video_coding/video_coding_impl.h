@@ -152,6 +152,8 @@ class VideoReceiver : public Module {
   void DecoderThreadStarting();
   void DecoderThreadStopped();
 
+  VCMFrameTypeCallback* frameTypeCallback(){return _frameTypeCallback;}
+
  protected:
   int32_t Decode(const webrtc::VCMEncodedFrame& frame);
   int32_t RequestKeyFrame();

@@ -21,6 +21,7 @@ public:
      virtual int32_t RegisterDecodeCompleteCallback( webrtc::DecodedImageCallback* callback) override;
 
      virtual int32_t Release() override;
+     virtual const char* ImplementationName() const override;
 };
 
 class DummyVideoDecoderFactory : public webrtc::VideoDecoderFactory

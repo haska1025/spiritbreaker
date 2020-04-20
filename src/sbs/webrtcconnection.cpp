@@ -208,9 +208,12 @@ void WebRtcConnection::OnIceCandidate(const webrtc::IceCandidateInterface* candi
         << " server_url=" << candidate->server_url()
         << " candidate_sdp=" << sdp_candidate; 
 
-    candidate_["candidate"] = sdp_candidate;
-    candidate_["sdpMid"] = candidate->sdp_mid();
-    candidate_["sdpMLineIndex"] = candidate->sdp_mline_index();
+    Json::Value v;
+    v["candidate"] = sdp_candidate;
+    v["sdpMid"] = candidate->sdp_mid();
+    v["sdpMLineIndex"] = candidate->sdp_mline_index();
+
+    candidate_.append(v);
 }
 void WebRtcConnection::OnIceConnectionReceivingChange(bool receiving)
 {

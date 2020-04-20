@@ -84,6 +84,13 @@ void VideoStreamDecoder::OnIncomingPayloadType(int payload_type) {
 void VideoStreamDecoder::OnDecoderImplementationName(
     const char* implementation_name) {
   receive_stats_callback_->OnDecoderImplementationName(implementation_name);
+
+  std::string name(implementation_name);
+  if (name.find("requestkeyframe") != std::string::npos){
+      if (video_receiver_->frameTypeCallback()){
+          video_receiver_->frameTypeCallback()->RequestKeyFrame();
+      }
+  }
 }
 
 void VideoStreamDecoder::OnReceiveRatesUpdated(uint32_t bit_rate,

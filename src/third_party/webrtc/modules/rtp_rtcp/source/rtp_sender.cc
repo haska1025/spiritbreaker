@@ -690,6 +690,9 @@ bool RTPSender::TimeToSendPacket(uint32_t ssrc,
     return true;
   }
 
+  RTC_LOG(LS_INFO) << "RtpSend::TimeToSendPacket ssrc:" << packet->Ssrc() << " timestamp:" << packet->Timestamp()
+      << " seqno:" << packet->SequenceNumber(); 
+
   return PrepareAndSendPacket(
       std::move(packet),
       retransmission && (RtxStatus() & kRtxRetransmitted) > 0, retransmission,
@@ -830,6 +833,7 @@ bool RTPSender::SendToNetwork(std::unique_ptr<RtpPacketToSend> packet,
   }
 
   uint32_t ssrc = packet->Ssrc();
+  uint32_t timestamp = packet->Timestamp();
   absl::optional<uint32_t> flexfec_ssrc = FlexfecSsrc();
   if (paced_sender_) {
     uint16_t seq_no = packet->SequenceNumber();
@@ -848,6 +852,7 @@ bool RTPSender::SendToNetwork(std::unique_ptr<RtpPacketToSend> packet,
 
     paced_sender_->InsertPacket(priority, ssrc, seq_no, corrected_time_ms,
                                 payload_length, false);
+    RTC_LOG(LS_INFO) << "RtpSend::SendToNetwork ssrc:" << ssrc << " timestamp:" << timestamp << " seqno:" << seq_no; 
     return true;
   }
 

@@ -539,6 +539,8 @@ bool RTPSenderVideo::SendVideo(FrameType frame_type,
                                        expected_retransmission_time_ms);
   size_t num_packets = packetizer->NumPackets();
 
+  RTC_LOG(LS_INFO) << "SendVideo timestamp: " << rtp_timestamp << " payload_size: " << payload_size << " num_packets: " << num_packets; 
+
   size_t unpacketized_payload_size;
   if (fragmentation && fragmentation->fragmentationVectorSize > 0) {
     unpacketized_payload_size = 0;

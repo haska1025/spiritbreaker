@@ -7,6 +7,7 @@
 #include "subscriber.h"
 #include "configuration.h"
 #include "dummy_video_codec.h"
+#include "dummy_audio_device.h"
 
 #include <rtc_base/logging.h>
 #include <api/audio_codecs/audio_decoder_factory.h>
@@ -39,7 +40,7 @@ int RoomMgr::Initialize()
 {
     int rc = SBS_SUCCESS;
 
-    rtc::scoped_refptr<webrtc::AudioDeviceModule> adm(new webrtc::FakeAudioDeviceModule());
+    rtc::scoped_refptr<webrtc::AudioDeviceModule> adm(new DummyAudioDevice());
 
     std::unique_ptr<webrtc::VideoDecoderFactory> video_decoder_factory(new DummyVideoDecoderFactory());
     peer_connection_factory_ = webrtc::CreatePeerConnectionFactory(

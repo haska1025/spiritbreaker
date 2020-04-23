@@ -1170,6 +1170,9 @@ class WebRtcVoiceMediaChannel::WebRtcAudioReceiveStream {
   void SetPlayout(bool playout) {
     RTC_DCHECK(worker_thread_checker_.CalledOnValidThread());
     RTC_DCHECK(stream_);
+
+    RTC_LOG(LS_ERROR) << "webrtc audio recv Stream  ssrc " << config_.rtp.remote_ssrc << " playout " << playout;
+
     if (playout) {
       stream_->Start();
     } else {
@@ -1881,6 +1884,8 @@ bool WebRtcVoiceMediaChannel::AddRecvStream(const StreamParams& sp) {
           engine()->audio_jitter_buffer_min_delay_ms_,
           engine()->audio_jitter_buffer_enable_rtx_handling_,
           unsignaled_frame_decryptor_, crypto_options_)));
+
+    RTC_LOG(LS_ERROR) << "Stream  ssrc " << ssrc << " playout " << playout_;
   recv_streams_[ssrc]->SetPlayout(playout_);
 
   return true;

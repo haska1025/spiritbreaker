@@ -27,8 +27,8 @@ private:
 
     std::unique_ptr<rtc::PlatformThread> _ptrThreadRec;
     std::unique_ptr<rtc::PlatformThread> _ptrThreadPlay;
-    bool _recording;
-    bool _playing;
+    bool _recording{false};
+    bool _playing{false};
     bool _recIsInitialized;
     bool _playIsInitialized;
 };

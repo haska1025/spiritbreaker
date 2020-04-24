@@ -91,10 +91,11 @@ bool DummyAudioDevice::RecThreadProcess()
     audio_device_buffer_->SetVQEData(0, 0);
     audio_device_buffer_->DeliverRecordedData();
 
+/*
     RTC_LOG(LS_INFO) << "recording sample rate:" << audio_device_buffer_->RecordingSampleRate()
         << " channels:" << audio_device_buffer_->RecordingChannels()
         << " rc: " << rc;
-       
+*/       
 
     return true;
 }
@@ -103,10 +104,10 @@ bool DummyAudioDevice::PlayThreadProcess()
     usleep(10*1000);
 
     uint32_t nSamples = audio_device_buffer_->RequestPlayoutData(480);
-
+/*
     RTC_LOG(LS_INFO) << "playout thread sample rate:" << audio_device_buffer_->PlayoutSampleRate() 
         << " channels:" << audio_device_buffer_->PlayoutChannels() << " samples " << nSamples;
-
+*/
     audio_frame frame;
     frame.nchannels = 1;
     frame.samples_per_channel = 480;

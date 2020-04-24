@@ -30,10 +30,17 @@ public:
     int Initialize();
     int Subscribe(Json::Value &value);
     int SetRemoteSdp(const std::string &sdp, const std::string &type);
+
     int PushData(video_decoder_data *data);
+    void SendVideoData();
+
     Json::Value GetCandidate(){return webrtc_conn_->GetCandidate();}
 
+    int GetAudioData(audio_frame &frame);
+    int PushAudioData(audio_frame &frame);
+
     virtual void OnMessage(rtc::Message* msg) override;
+
 private:
     std::shared_ptr<Peer> peer_;
     std::shared_ptr<Publisher> publisher_;
@@ -43,6 +50,9 @@ private:
 
     std::deque<video_decoder_data*> video_datas_;
     std::mutex data_queue_mutex_;
+
+    std::deque<audio_frame> audio_frames_;
+    std::mutex audio_frame_mutex_;
 };
 SBS_NAMESPACE_DECL_END
 #endif//_SUBSCRIBER_H_

@@ -4,6 +4,7 @@
 #include <modules/audio_device/include/fake_audio_device.h>
 #include <modules/audio_device/audio_device_buffer.h>
 #include "rtc_base/platform_thread.h"
+#include "subscriber.h"
 
 class DummyAudioDevice : public webrtc::FakeAudioDeviceModule
 {
@@ -21,6 +22,11 @@ public:
 
      bool RecThreadProcess();
      bool PlayThreadProcess();
+
+     void RegisterSubscriber(std::shared_ptr<Subscriber> sub)
+     {
+         sub_ = sub;
+     }
 private:
      std::unique_ptr<webrtc::AudioDeviceBuffer> audio_device_buffer_; 
 //    webrtc::FineAudioBuffer fine_audio_buffer_;
@@ -31,6 +37,8 @@ private:
     bool _playing{false};
     bool _recIsInitialized;
     bool _playIsInitialized;
+
+    std::shared_ptr<Subscriber> sub_;
 };
 #endif//_DUMMY_AUDIO_DEVICE_H_
 

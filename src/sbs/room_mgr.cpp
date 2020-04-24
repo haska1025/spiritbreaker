@@ -25,6 +25,7 @@
 
 
 Publisher *pub = nullptr;
+DummyAudioDevice *gAudioDevice = nullptr;
 
 RoomMgr::RoomMgr()
 {
@@ -40,7 +41,8 @@ int RoomMgr::Initialize()
 {
     int rc = SBS_SUCCESS;
 
-    rtc::scoped_refptr<webrtc::AudioDeviceModule> adm(new DummyAudioDevice());
+    gAudioDevice = new DummyAudioDevice();
+    rtc::scoped_refptr<webrtc::AudioDeviceModule> adm(gAudioDevice);
 
     std::unique_ptr<webrtc::VideoDecoderFactory> video_decoder_factory(new DummyVideoDecoderFactory());
     peer_connection_factory_ = webrtc::CreatePeerConnectionFactory(
@@ -295,6 +297,9 @@ int RoomMgr::Subscribe(const Message &request, Message &response)
 
     sub = std::make_shared<Subscriber>(peer, publisher);
     sub->Initialize();
+    if (gAudioDevice){
+        gAudioDevice->RegisterSubscriber(sub);
+    }
 
     peer->AddSubscriber(sub);
     publisher->AddSubscriber(sub);

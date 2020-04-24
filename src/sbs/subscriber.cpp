@@ -6,6 +6,9 @@
 extern rtc::Thread *pthrMain; 
 extern DummyVideoEncoder *gEncoder;
 
+constexpr int MSGID_SEND_VIDEO = 1; 
+constexpr int MSGID_SEND_AUDIO = 2; 
+
 Subscriber::Subscriber(std::shared_ptr<Peer> peer, std::shared_ptr<Publisher> pub)
     :peer_{peer}, publisher_{pub}
 {
@@ -54,11 +57,33 @@ int Subscriber::PushData(video_decoder_data *data)
     std::lock_guard<std::mutex> lg(data_queue_mutex_);
     video_datas_.push_back(data);
 
-    pthrMain->Post(RTC_FROM_HERE, this);
+    pthrMain->Post(RTC_FROM_HERE, this, MSGID_SEND_VIDEO);
     return 0;
 }
 
-void Subscriber::OnMessage(rtc::Message* msg)
+int Subscriber::PushAudioData(audio_frame &frame)
+{
+    std::lock_guard<std::mutex> lg(audio_frame_mutex_);
+    audio_frames_.push_back(frame);
+
+//    pthrMain->Post(RTC_FROM_HERE, this, MSGID_SEND_AUDIO);
+
+    return 0;
+}
+
+int Subscriber::GetAudioData(audio_frame &frame)
+{
+    std::lock_guard<std::mutex> lg(audio_frame_mutex_);
+    if(!audio_frames_.empty()){
+        auto data = audio_frames_.front();
+        audio_frames_.pop_front();
+        frame = data;
+        return 0;
+    }
+
+    return -1;
+}
+void Subscriber::SendVideoData()
 {
     std::lock_guard<std::mutex> lg(data_queue_mutex_);
     if (gEncoder){
@@ -69,10 +94,13 @@ void Subscriber::OnMessage(rtc::Message* msg)
             delete data;
             data = nullptr;
         }
-      //  for(auto it = video_datas_.begin(); it != video_datas_.end(); ){
-    //        delete (*it);
-        //    video_datas_.erase(it++); 
-       // }
+    }
+}
+
+void Subscriber::OnMessage(rtc::Message* msg)
+{
+    if (msg->message_id == MSGID_SEND_VIDEO){
+        SendVideoData();
     }
 }
 

@@ -32,7 +32,7 @@ int32_t DummyVideoDecoder::Decode(const webrtc::EncodedImage& input_image,
     data->input_image.timing_.encode_finish_ms = input_image.timing_.encode_finish_ms;
     data->codec_specific_info = *codec_specific_info;
 
-    pub->OnRecvData(data);
+    pub->OnRecvVideoData(data);
     return 0;
 }
 

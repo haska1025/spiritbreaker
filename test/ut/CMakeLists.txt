@@ -34,7 +34,7 @@ target_link_libraries(sbs_ut sbs
         yuv jpeg
         vpx rnnoise
         srtp2 ssl crypto 
-        absl_bad_optional_access absl_strings absl_base absl_throw_delegate absl_bad_variant_access
+        absl_bad_optional_access absl_strings absl_base absl_internal_throw_delegate absl_bad_variant_access
         ${JSONCPP_LIBRARIES}
         ${PROTOBUF_LIBRARIES}
         ${CPPUNIT_LIBRARIES}

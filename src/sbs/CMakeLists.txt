@@ -3,6 +3,7 @@ message("Build spiritbreaker...")
 cmake_minimum_required(VERSION 2.8.11)
 
 file(GLOB sbs_srcs *.h *.cpp *.cc)
+list(FILTER  sbs_srcs EXCLUDE REGEX "sbs_main.cpp")
 
 source_group(source FILES ${sbs_srcs})
 
@@ -35,7 +36,7 @@ target_link_libraries(spiritbreaker sbs
         yuv jpeg
         vpx rnnoise
         srtp2 ssl crypto 
-        absl_bad_optional_access absl_strings absl_base absl_throw_delegate absl_bad_variant_access
+        absl_bad_optional_access absl_strings absl_base absl_internal_throw_delegate absl_bad_variant_access
         ${JSONCPP_LIBRARIES}
         ${PROTOBUF_LIBRARIES}
         -ldl

@@ -18,7 +18,7 @@ target_include_directories(turnserver PUBLIC ../../../abseil-cpp/)
 
 target_link_libraries(turnserver webrtc
         ssl crypto
-        absl_strings absl_base absl_throw_delegate
+        absl_strings absl_base absl_internal_throw_delegate
         )
 
 

@@ -14,7 +14,7 @@ add_executable(stunprobe ${stun_probe_src})
 target_include_directories(stunprobe PUBLIC ../../)
 target_include_directories(stunprobe PUBLIC ../../../abseil-cpp/)
 target_link_libraries(stunprobe webrtc ssl crypto
-        absl_strings absl_base absl_throw_delegate
+        absl_strings absl_base absl_internal_throw_delegate 
         )
 
 

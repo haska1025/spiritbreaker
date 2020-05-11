@@ -15,7 +15,7 @@ target_include_directories(relayserver PUBLIC ../../)
 target_include_directories(relayserver PUBLIC ../../../abseil-cpp/)
 
 target_link_libraries(relayserver webrtc ssl crypto
-        absl_strings absl_base absl_throw_delegate
+        absl_strings absl_base absl_internal_throw_delegate 
         )
 
 
